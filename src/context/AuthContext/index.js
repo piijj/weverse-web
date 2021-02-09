@@ -1,11 +1,11 @@
 import React, { useEffect, useContext, createContext, useReducer } from "react";
-import { useHistory } from "react-router-dom";
 import reducer from "./reducer";
 import firebase, { facebook, twitter, google } from "../../api/firebase";
 
 const initialState = {
     user: undefined,
     loading: true,
+    msg: undefined,
 };
 
 const AuthStateContext = createContext(initialState);
@@ -13,27 +13,47 @@ const AuthDispatchContext = createContext(undefined);
 
 const AuthProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
-    const history = useHistory();
 
-    // const userRegister = async (email, password) => {
-    //   const response = await register(email, password);
-    //   if (response.success) {
-    //     history.push("/login");
-    //   } else {
-    //     console.log("error");
-    //   }
-    // };
+    const userRegister = (values) => {
+        firebase
+            .auth()
+            .createUserWithEmailAndPassword(values.email, values.password)
+            .then((credential) => {
+                if (credential) {
+                    firebase
+                        .firestore()
+                        .collection("users")
+                        .doc(credential.user.uid)
+                        .set({
+                            email: values.email,
+                            country: values.country,
+                            firstName: values.firstName,
+                            lastName: values.lastName,
+                        })
+                        .then(() => console.log("success"))
+                        .catch((error) => showMessage(error.message, "error"));
+                }
+            })
+            .catch((error) => {
+                showMessage(error.message, "error");
+            });
+    };
 
     const userLogin = (email, password, isSubmitting) => {
         firebase
             .auth()
             .signInWithEmailAndPassword(email, password)
-            .then((e) => {
-                console.log(e);
+            .then((credential) => {
                 isSubmitting(false);
+                if (!credential.user.emailVerified) {
+                    showMessage(
+                        "Please verify your account before logging in.",
+                        "error"
+                    );
+                }
             })
             .catch((error) => {
-                console.log(error);
+                showMessage(error.message, "error");
                 isSubmitting(false);
             });
     };
@@ -51,25 +71,49 @@ const AuthProvider = ({ children }) => {
             .then((e) => {
                 return;
             })
-            .catch((error) => {
-                console.log(error);
-                return;
-            });
+            .catch((error) => showMessage(error.message, "error"));
     };
 
-    // const userLogout = async () => {
-    //   const response = await logout();
-    //   if (response.success) {
-    //     dispatch({ type: "LOGOUT", payload: response });
-    //   } else {
-    //     console.log("error");
-    //   }
-    // };
+    const userLogout = async () => {
+        firebase.auth().signOut();
+    };
+
+    const showMessage = (err, type) => {
+        dispatch({ type: "SHOW_MSG", payload: { msg: err, type } });
+        setTimeout(() => dispatch({ type: "SHOW_MSG", payload: null }), 3000);
+    };
+    //to refactor
+    const resendEmailVerification = async () => {
+        await firebase
+            .auth()
+            .currentUser.sendEmailVerification()
+            .then(() => {
+                showMessage("Verification email sent.", "success");
+                userLogout();
+            })
+            .catch((error) => showMessage(error.message, "error"));
+    };
 
     useEffect(() => {
-        firebase.auth().onAuthStateChanged((userAuth) => {
-            if (userAuth) {
-                dispatch({ type: "SET_USER", payload: userAuth });
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                firebase
+                    .firestore()
+                    .collection("users")
+                    .doc(user.uid)
+                    .onSnapshot((currentUser) => {
+                        if (currentUser.exists) {
+                            dispatch({
+                                type: "SET_USER",
+                                payload: {
+                                    ...currentUser.data(),
+                                    key: currentUser.id,
+                                },
+                            });
+                        }
+                    });
+            } else {
+                dispatch({ type: "SET_USER", payload: undefined });
             }
         });
     }, []);
@@ -77,7 +121,13 @@ const AuthProvider = ({ children }) => {
     return (
         <AuthStateContext.Provider value={state}>
             <AuthDispatchContext.Provider
-                value={{ dispatch, userLogin, userLoginWithSocialMedia }}
+                value={{
+                    dispatch,
+                    userLogin,
+                    userLoginWithSocialMedia,
+                    userRegister,
+                    resendEmailVerification,
+                }}
             >
                 {children}
             </AuthDispatchContext.Provider>

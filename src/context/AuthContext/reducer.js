@@ -11,6 +11,11 @@ export default (state, action) => {
                 ...state,
                 user: undefined,
             };
+        case "SHOW_MSG":
+            return {
+                ...state,
+                msg: action.payload,
+            };
         default:
             return state;
     }

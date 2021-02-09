@@ -48,14 +48,14 @@ const EmailForm = ({ updateDetails }) => (
             initialValues={{ email: "" }}
             onSubmit={(values) => updateDetails({ email: values.email })}
         >
-            {({ handleSubmit, handleChange, errors, touched }) => (
+            {({ handleSubmit, handleChange, errors }) => (
                 <>
                     <OutlinedInput
                         placeholder="Email for your Weverse Account"
                         variant="outlined"
                         name="email"
                         onChange={handleChange}
-                        error={errors.email}
+                        error={!!errors.email}
                     />
                     <ErrorMessage>
                         {errors.email && (
@@ -68,7 +68,7 @@ const EmailForm = ({ updateDetails }) => (
                     <ButtonWrapper
                         margin="8px 0px 0px"
                         onClick={handleSubmit}
-                        disabled={errors.email ? true : false}
+                        disabled={!!errors.email}
                     >
                         Next
                     </ButtonWrapper>

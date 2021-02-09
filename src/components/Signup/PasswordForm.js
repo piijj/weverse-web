@@ -109,7 +109,7 @@ const PasswordForm = ({ updateDetails }) => {
                             placeholder="Password"
                             handleChange={handleChange}
                             value={values.password}
-                            error={errors.password}
+                            error={!!errors.password}
                         />
                         <ErrorMessage>
                             {errors.password && (
@@ -124,7 +124,7 @@ const PasswordForm = ({ updateDetails }) => {
                             placeholder="Confirm password"
                             handleChange={handleChange}
                             value={values.passwordConfirmation}
-                            error={errors.passwordConfirmation}
+                            error={!!errors.passwordConfirmation}
                         />
                         <ErrorMessage>
                             {errors.passwordConfirmation && (
@@ -139,9 +139,10 @@ const PasswordForm = ({ updateDetails }) => {
                             margin="8px 0px 0px"
                             onClick={handleSubmit}
                             disabled={
-                                errors.password || errors.passwordConfirmation
-                                    ? true
-                                    : false
+                                !!(
+                                    errors.password ||
+                                    errors.passwordConfirmation
+                                )
                             }
                         >
                             Next

@@ -132,7 +132,7 @@ const Login = () => {
                             variant="outlined"
                             name="email"
                             onChange={handleChange}
-                            error={errors.email}
+                            error={!!errors.email}
                         />
                         <ErrorMessage>
                             {errors.email && (
@@ -147,7 +147,7 @@ const Login = () => {
                             variant="outlined"
                             name="password"
                             onChange={handleChange}
-                            error={errors.password}
+                            error={!!errors.password}
                             type="password"
                         />
                         <ErrorMessage>
@@ -161,9 +161,11 @@ const Login = () => {
                         <ButtonWrapper
                             onClick={handleSubmit}
                             disabled={
-                                isSubmitting || errors.password || errors.email
-                                    ? true
-                                    : false
+                                !!(
+                                    isSubmitting ||
+                                    errors.password ||
+                                    errors.email
+                                )
                             }
                         >
                             Log In

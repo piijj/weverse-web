@@ -59,7 +59,7 @@ const UserInformationForm = ({ updateDetails }) => (
                         variant="outlined"
                         name="firstName"
                         onChange={handleChange}
-                        error={errors.firstName}
+                        error={!!errors.firstName}
                     />
                     <ErrorMessage>
                         {errors.firstName && (
@@ -77,7 +77,7 @@ const UserInformationForm = ({ updateDetails }) => (
                         variant="outlined"
                         name="lastName"
                         onChange={handleChange}
-                        error={errors.lastName}
+                        error={!!errors.lastName}
                     />
                     <ErrorMessage>
                         {errors.lastName && (
@@ -95,7 +95,7 @@ const UserInformationForm = ({ updateDetails }) => (
                             name="country"
                             onChange={handleChange}
                             variant="outlined"
-                            error={errors.country}
+                            error={!!errors.country}
                         >
                             <MenuItem value="South Korea">South Korea</MenuItem>
                             <MenuItem value="Other than South Korea">
@@ -115,11 +115,11 @@ const UserInformationForm = ({ updateDetails }) => (
                         margin="8px 0px 0px"
                         onClick={handleSubmit}
                         disabled={
-                            errors.firstName ||
-                            errors.lastName ||
-                            errors.country
-                                ? true
-                                : false
+                            !!(
+                                errors.firstName ||
+                                errors.lastName ||
+                                errors.country
+                            )
                         }
                     >
                         Next

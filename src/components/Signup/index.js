@@ -105,6 +105,7 @@ const BackIcon = styled(ArrowBackRounded)`
 `;
 
 const SignupWithEmail = ({ signUpWithEmail }) => {
+    const { userRegister } = useAuthDispatch();
     const [step, setStep] = useState(1);
     const [userDetails, setUserDetails] = useState({ email: "" });
 
@@ -117,9 +118,17 @@ const SignupWithEmail = ({ signUpWithEmail }) => {
     };
 
     const updateDetails = (values) => {
-        setUserDetails({ ...userDetails, ...values });
-        setStep(step + 1);
-        console.log(userDetails);
+        if (step === 4) {
+            handleRegisterUser();
+        } else {
+            setUserDetails({ ...userDetails, ...values });
+            setStep(step + 1);
+        }
+    };
+
+    const handleRegisterUser = async () => {
+        await userRegister(userDetails);
+        await setStep(step + 1);
     };
 
     return (
