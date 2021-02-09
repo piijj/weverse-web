@@ -1,26 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import { Formik } from "formik";
-import { OutlinedInput } from "@material-ui/core";
+import { OutlinedInput, Button } from "@material-ui/core";
 import { Error } from "@material-ui/icons";
 import * as Yup from "yup";
-
-const Field = styled(OutlinedInput)`
-    display: block;
-    color: rgb(32, 36, 41);
-    width: 100%;
-    background-image: none;
-    background-color: rgb(255, 255, 255);
-    font-size: 16px;
-    border-radius: 4px;
-    word-break: break-all;
-
-    & .MuiOutlinedInput-root {
-        &.Mui-focused fieldset {
-            border: 1px solid rgb(11, 230, 193);
-        }
-    }
-`;
 
 const Text = styled.div`
     font-size: ${(props) => props.fontSize || 14}px;
@@ -31,27 +14,7 @@ const Text = styled.div`
     margin: ${(props) => props.margin};
 `;
 
-const Button = styled.button`
-    appearance: none;
-    background: ${(props) =>
-        props.disabled ? "rgb(228, 230, 234)" : "rgb(11, 230, 193)"};
-    outline: none;
-    border-radius: 4px;
-    border: ${(props) =>
-        props.disabled
-            ? "1px solid rgb(228, 230, 234)"
-            : "1px solid rgb(11, 230, 193)"};
-    color: rgb(255, 255, 255);
-    cursor: pointer;
-    display: inline-block;
-    font-size: 17px;
-    font-weight: 700;
-    width: 100%;
-    height: 52px;
-    line-height: 50px;
-    padding: 0px 12px;
-    text-align: center;
-    transition: all 0.5s ease-out 0s;
+const ButtonWrapper = styled(Button)`
     margin: ${(props) => props.margin};
 `;
 
@@ -87,28 +50,28 @@ const EmailForm = ({ updateDetails }) => (
         >
             {({ handleSubmit, handleChange, errors, touched }) => (
                 <>
-                    <Field
+                    <OutlinedInput
                         placeholder="Email for your Weverse Account"
                         variant="outlined"
                         name="email"
                         onChange={handleChange}
-                        inputProps={{ style: { height: "10px" } }}
+                        error={errors.email}
                     />
                     <ErrorMessage>
-                        {errors.email && touched.email && (
+                        {errors.email && (
                             <>
                                 <ErrorIcon fontSize="small" />
                                 &nbsp;&nbsp;Please enter valid Email.
                             </>
                         )}
                     </ErrorMessage>
-                    <Button
+                    <ButtonWrapper
                         margin="8px 0px 0px"
                         onClick={handleSubmit}
                         disabled={errors.email ? true : false}
                     >
                         Next
-                    </Button>
+                    </ButtonWrapper>
                 </>
             )}
         </Formik>

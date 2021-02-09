@@ -1,26 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { Formik } from "formik";
-import { InputAdornment, IconButton, OutlinedInput } from "@material-ui/core";
+import {
+    InputAdornment,
+    IconButton,
+    OutlinedInput,
+    Button,
+} from "@material-ui/core";
 import { Error, VisibilityOff, Visibility } from "@material-ui/icons";
 import * as Yup from "yup";
-
-const Field = styled(OutlinedInput)`
-    display: block;
-    color: rgb(32, 36, 41);
-    width: 100%;
-    background-image: none;
-    background-color: rgb(255, 255, 255);
-    font-size: 16px;
-    border-radius: 4px;
-    word-break: break-all;
-
-    & .MuiOutlinedInput-root {
-        &.Mui-focused fieldset {
-            border: 1px solid rgb(11, 230, 193);
-        }
-    }
-`;
 
 const Text = styled.div`
     font-size: ${(props) => props.fontSize || 14}px;
@@ -31,27 +19,7 @@ const Text = styled.div`
     margin: ${(props) => props.margin};
 `;
 
-const Button = styled.button`
-    appearance: none;
-    background: ${(props) =>
-        props.disabled ? "rgb(228, 230, 234)" : "rgb(11, 230, 193)"};
-    outline: none;
-    border-radius: 4px;
-    border: ${(props) =>
-        props.disabled
-            ? "1px solid rgb(228, 230, 234)"
-            : "1px solid rgb(11, 230, 193)"};
-    color: rgb(255, 255, 255);
-    cursor: pointer;
-    display: inline-block;
-    font-size: 17px;
-    font-weight: 700;
-    width: 100%;
-    height: 52px;
-    line-height: 50px;
-    padding: 0px 12px;
-    text-align: center;
-    transition: all 0.5s ease-out 0s;
+const ButtonWrapper = styled(Button)`
     margin: ${(props) => props.margin};
 `;
 
@@ -74,11 +42,12 @@ const PasswordForm = ({ updateDetails }) => {
         passwordConfirmation: false,
     });
 
-    const Password = ({ prop, placeholder, handleChange, value }) => (
-        <Field
+    const Password = ({ prop, placeholder, handleChange, value, error }) => (
+        <OutlinedInput
             type={showPassword[prop] ? "text" : "password"}
             onChange={handleChange}
             value={value}
+            error={error}
             endAdornment={
                 <InputAdornment position="end">
                     <IconButton
@@ -98,7 +67,6 @@ const PasswordForm = ({ updateDetails }) => {
                     </IconButton>
                 </InputAdornment>
             }
-            inputProps={{ style: { height: "10px" } }}
             name={prop}
             placeholder={placeholder}
         />
@@ -117,11 +85,11 @@ const PasswordForm = ({ updateDetails }) => {
                 validationSchema={Yup.object().shape({
                     password: Yup.string()
                         .required("Required")
-                        .min(8, "Must be more than 8 characters"),
-                    // .matches(
-                    //   /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]?).{8,}$/,
-                    //   "Password should not have special characters"
-                    // ),
+                        .min(8, "Must be more than 8 characters")
+                        .matches(
+                            /^(?=.*\d)(?=.*[a-z])(?=.*[^a-zA-Z0-9])(?!.*\s).{8,}$/,
+                            "Password should have atleast 1 number and 1 special character"
+                        ),
                     passwordConfirmation: Yup.string()
                         .required("Required")
                         .oneOf(
@@ -134,16 +102,17 @@ const PasswordForm = ({ updateDetails }) => {
                     updateDetails({ password: values.password });
                 }}
             >
-                {({ handleSubmit, handleChange, errors, touched, values }) => (
+                {({ handleSubmit, handleChange, errors, values }) => (
                     <>
                         <Password
                             prop="password"
                             placeholder="Password"
                             handleChange={handleChange}
                             value={values.password}
+                            error={errors.password}
                         />
                         <ErrorMessage>
-                            {errors.password && touched.password && (
+                            {errors.password && (
                                 <>
                                     <ErrorIcon fontSize="small" />
                                     &nbsp;&nbsp;{errors.password}
@@ -155,24 +124,28 @@ const PasswordForm = ({ updateDetails }) => {
                             placeholder="Confirm password"
                             handleChange={handleChange}
                             value={values.passwordConfirmation}
+                            error={errors.passwordConfirmation}
                         />
                         <ErrorMessage>
-                            {errors.passwordConfirmation &&
-                                touched.passwordConfirmation && (
-                                    <>
-                                        <ErrorIcon fontSize="small" />
-                                        &nbsp;&nbsp;
-                                        {errors.passwordConfirmation}
-                                    </>
-                                )}
+                            {errors.passwordConfirmation && (
+                                <>
+                                    <ErrorIcon fontSize="small" />
+                                    &nbsp;&nbsp;
+                                    {errors.passwordConfirmation}
+                                </>
+                            )}
                         </ErrorMessage>
-                        <Button
+                        <ButtonWrapper
                             margin="8px 0px 0px"
                             onClick={handleSubmit}
-                            disabled={errors.email ? true : false}
+                            disabled={
+                                errors.password || errors.passwordConfirmation
+                                    ? true
+                                    : false
+                            }
                         >
                             Next
-                        </Button>
+                        </ButtonWrapper>
                     </>
                 )}
             </Formik>

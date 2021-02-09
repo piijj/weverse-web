@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { useAuthDispatch } from "../../context/AuthContext";
 import { ArrowBackRounded } from "@material-ui/icons";
+import { Button } from "@material-ui/core";
 import UserInformationForm from "./UserDetails";
 import PasswordForm from "./PasswordForm";
 import EmailForm from "./EmailForm";
@@ -52,28 +53,8 @@ const Text = styled.div`
     margin: ${(props) => props.margin};
 `;
 
-const Button = styled.button`
-    appearance: none;
-    background: ${(props) =>
-        props.disabled ? "rgb(228, 230, 234)" : "rgb(11, 230, 193)"};
-    outline: none;
-    border-radius: 4px;
-    border: ${(props) =>
-        props.disabled
-            ? "1px solid rgb(228, 230, 234)"
-            : "1px solid rgb(11, 230, 193)"};
-    color: rgb(255, 255, 255);
-    cursor: pointer;
-    display: inline-block;
-    font-size: 17px;
-    font-weight: 700;
-    width: 100%;
-    height: 52px;
-    line-height: 50px;
-    padding: 0px 12px;
-    text-align: center;
-    transition: all 0.5s ease-out 0s;
-    margin: ${(props) => props.margin};
+const ButtonWrapper = styled(Button)`
+    margin: ${(props) => props.margin}!important;
 `;
 
 const TextWrapper = styled.div`
@@ -124,7 +105,7 @@ const BackIcon = styled(ArrowBackRounded)`
 `;
 
 const SignupWithEmail = ({ signUpWithEmail }) => {
-    const [step, setStep] = useState(5);
+    const [step, setStep] = useState(1);
     const [userDetails, setUserDetails] = useState({ email: "" });
 
     const handleBack = () => {
@@ -191,12 +172,12 @@ const Signup = () => {
                     and much more!
                 </Text>
             </Title>
-            <Button
+            <ButtonWrapper
                 margin="72px 0px 56px"
                 onClick={() => signUpWithEmail(true)}
             >
                 Continue with Email
-            </Button>
+            </ButtonWrapper>
             <Divider>
                 <Line />
                 <Text color="rgb(135, 142, 150)" fontSize={14}>
@@ -224,8 +205,7 @@ const Signup = () => {
                 </Text>
                 <Text color="rgb(135, 142, 150)" fontSize={14}>
                     Simply{" "}
-                    <Link onClick={() => history.push("/signup")}>Log In</Link>{" "}
-                    !
+                    <Link onClick={() => history.push("/login")}>Log In</Link> !
                 </Text>
             </TextWrapper>
         </Wrapper>

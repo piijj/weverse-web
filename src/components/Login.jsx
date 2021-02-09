@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { Formik } from "formik";
 import { useAuthDispatch } from "../context/AuthContext";
-import { TextField } from "@material-ui/core";
+import { OutlinedInput, Button } from "@material-ui/core";
 import { Error } from "@material-ui/icons";
 import * as Yup from "yup";
 
@@ -28,23 +28,6 @@ const Logo = styled.img`
     text-align: center;
 `;
 
-const Field = styled(TextField)`
-    display: block;
-    color: rgb(32, 36, 41);
-    width: 100%;
-    background-image: none;
-    background-color: rgb(255, 255, 255);
-    font-size: 16px;
-    border-radius: 4px;
-    word-break: break-all;
-
-    & .MuiOutlinedInput-root {
-        &.Mui-focused fieldset {
-            border: 1px solid rgb(11, 230, 193);
-        }
-    }
-`;
-
 const Text = styled.div`
     font-size: ${(props) => props.fontSize}px;
     color: ${(props) => props.color};
@@ -53,24 +36,8 @@ const Text = styled.div`
     line-height: ${(props) => props.lineHeight};
 `;
 
-const Button = styled.button`
+const ButtonWrapper = styled(Button)`
     margin: "26px 0px 0px";
-    appearance: none;
-    background: none rgb(11, 230, 193);
-    outline: none;
-    border-radius: 4px;
-    border: 1px solid rgb(11, 230, 193);
-    color: rgb(255, 255, 255);
-    cursor: pointer;
-    display: inline-block;
-    font-size: 17px;
-    font-weight: 700;
-    width: 100%;
-    height: 52px;
-    line-height: 50px;
-    padding: 0px 12px;
-    text-align: center;
-    transition: all 0.5s ease-out 0s;
 `;
 
 const ErrorIcon = styled(Error)`
@@ -160,39 +127,47 @@ const Login = () => {
                     touched,
                 }) => (
                     <>
-                        <Field
+                        <OutlinedInput
                             placeholder="Weverse Account (email)"
                             variant="outlined"
                             name="email"
                             onChange={handleChange}
-                            inputProps={{ style: { height: "10px" } }}
+                            error={errors.email}
                         />
                         <ErrorMessage>
-                            {errors.email && touched.email && (
+                            {errors.email && (
                                 <>
                                     <ErrorIcon fontSize="small" />
                                     &nbsp;&nbsp;Please enter valid Email.
                                 </>
                             )}
                         </ErrorMessage>
-                        <Field
+                        <OutlinedInput
                             placeholder="Password"
                             variant="outlined"
                             name="password"
                             onChange={handleChange}
-                            inputProps={{ style: { height: "10px" } }}
+                            error={errors.password}
+                            type="password"
                         />
                         <ErrorMessage>
-                            {errors.password && touched.password && (
+                            {errors.password && (
                                 <>
                                     <ErrorIcon fontSize="small" />
                                     &nbsp;&nbsp;Enter password
                                 </>
                             )}{" "}
                         </ErrorMessage>
-                        <Button onClick={handleSubmit} disabled={isSubmitting}>
+                        <ButtonWrapper
+                            onClick={handleSubmit}
+                            disabled={
+                                isSubmitting || errors.password || errors.email
+                                    ? true
+                                    : false
+                            }
+                        >
                             Log In
-                        </Button>
+                        </ButtonWrapper>
                     </>
                 )}
             </Formik>

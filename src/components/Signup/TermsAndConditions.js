@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Checkbox, FormControlLabel } from "@material-ui/core";
+import { Checkbox, FormControlLabel, Button } from "@material-ui/core";
 import { CheckCircle } from "@material-ui/icons";
 
 const Text = styled.div`
@@ -12,27 +12,7 @@ const Text = styled.div`
     margin: ${(props) => props.margin};
 `;
 
-const Button = styled.button`
-    appearance: none;
-    background: ${(props) =>
-        props.disabled ? "rgb(228, 230, 234)" : "rgb(11, 230, 193)"};
-    outline: none;
-    border-radius: 4px;
-    border: ${(props) =>
-        props.disabled
-            ? "1px solid rgb(228, 230, 234)"
-            : "1px solid rgb(11, 230, 193)"};
-    color: rgb(255, 255, 255);
-    cursor: pointer;
-    display: inline-block;
-    font-size: 17px;
-    font-weight: 700;
-    width: 100%;
-    height: 52px;
-    line-height: 50px;
-    padding: 0px 12px;
-    text-align: center;
-    transition: all 0.5s ease-out 0s;
+const ButtonWrapper = styled(Button)`
     margin: ${(props) => props.margin};
 `;
 
@@ -134,13 +114,13 @@ const TermsAndConditions = ({ updateDetails }) => {
                 }
                 label={<Text>I’m Over 14 Years Old. (Required)</Text>}
             />
-            <Button
+            <ButtonWrapper
                 margin="8px 0px 0px"
-                disabled={checked < 3}
+                disabled={checked.length < 3}
                 onClick={() => updateDetails({})}
             >
                 Next
-            </Button>
+            </ButtonWrapper>
         </>
     );
 };
