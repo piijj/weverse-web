@@ -1,0 +1,32 @@
+export default (state, action) => {
+    switch (action.type) {
+        case "SET_ARTISTS":
+            return {
+                ...state,
+                artists: action.payload,
+            };
+        case "SET_SHOPS":
+            return {
+                ...state,
+                shops: action.payload,
+            };
+        case "SET_ARTIST":
+            return {
+                ...state,
+                artist: action.payload,
+                shop: null,
+            };
+        case "SET_SHOP":
+            return {
+                ...state,
+                shop: action.payload,
+            };
+        case "SET_LOADING":
+            return {
+                ...state,
+                loading: action.payload,
+            };
+        default:
+            return state;
+    }
+};

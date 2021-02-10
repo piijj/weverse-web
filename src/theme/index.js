@@ -16,6 +16,9 @@ const theme = createMuiTheme({
         primary: {
             main: "#0BE6C1",
         },
+        secondary: {
+            main: "rgba(255, 255, 255)",
+        },
         text: {
             primary: "#000",
             secondary: "#878E96",
@@ -71,6 +74,20 @@ const theme = createMuiTheme({
                     background: "rgb(228, 230, 234) !important",
                     border: "1px solid rgb(228, 230, 234)",
                 },
+            },
+        },
+        MuiAppBar: {
+            root: {
+                width: "100%",
+                height: "75px",
+                display: "flex",
+                zIndex: "1100",
+                boxSizing: "border-box",
+                flexShrink: 0,
+                flexDirection: "column",
+                borderBottom: "1px solid rgb(235, 235, 235)",
+                backgroundColor: "rgb(255, 255, 255)",
+                boxShadow: "none",
             },
         },
     },

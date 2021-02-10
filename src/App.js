@@ -4,13 +4,16 @@ import { ThemeProvider } from "@material-ui/core";
 import AuthProvider from "./context/AuthContext";
 import AppRoutes from "./routes";
 import theme from "./theme";
+import DataProvider from "./context/DataContext";
 
 const App = () => (
     <BrowserRouter>
         <AuthProvider>
-            <ThemeProvider theme={theme}>
-                <AppRoutes />
-            </ThemeProvider>
+            <DataProvider>
+                <ThemeProvider theme={theme}>
+                    <AppRoutes />
+                </ThemeProvider>
+            </DataProvider>
         </AuthProvider>
     </BrowserRouter>
 );
