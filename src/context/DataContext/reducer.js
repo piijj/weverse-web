@@ -22,6 +22,11 @@ export default (state, action) => {
                 ...state,
                 shop: action.payload,
             };
+        case "SET_PRODUCTS":
+            return {
+                ...state,
+                products: action.payload,
+            };
         case "SET_LOADING":
             return {
                 ...state,

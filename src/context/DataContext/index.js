@@ -7,6 +7,7 @@ const initialState = {
     shops: {},
     artist: null,
     shop: null,
+    products: [],
     loading: true,
 };
 
@@ -47,6 +48,24 @@ const DataProvider = ({ children }) => {
             });
     };
 
+    const fetchProducts = async () => {
+        await firebase
+            .firestore()
+            .collection("products")
+            .where("artistId", "==", state.artist.id)
+            .where("shopsAvailableIn", "array-contains", state.shop.id)
+            .get()
+            .then((querySnapshot) => {
+                if (!querySnapshot.empty) {
+                    const products = querySnapshot.docs.map((doc) => ({
+                        ...doc.data(),
+                        id: doc.id,
+                    }));
+                    dispatch({ type: "SET_PRODCUTS", payload: products });
+                }
+            });
+    };
+
     const loadData = async () => {
         await dispatch({ type: "SET_LOADING", payload: true });
         await fetchShops();
@@ -61,6 +80,12 @@ const DataProvider = ({ children }) => {
     const handleSelectShop = (shop) => {
         dispatch({ type: "SET_SHOP", payload: shop });
     };
+
+    useEffect(() => {
+        if (state.shop && state.artist) {
+            fetchProducts();
+        }
+    }, [state.shop, state.artist]);
 
     useEffect(() => {
         loadData();
