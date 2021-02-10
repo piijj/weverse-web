@@ -5,16 +5,16 @@ import { useAuthState } from "../context/AuthContext";
 
 const Wrapper = ({ component: Component, isPrivate, ...rest }) => {
     const { user, loading, msg } = useAuthState();
-    const showHeader = rest.path != "/login" && rest.path != "/signup";
 
-    // if ((rest.path === "/login" || rest.path === "/register") && user && user.emailVerified) {
-    //   return <Redirect to="/" />;
-    // }
+    if (
+        (rest.path === "/login" || rest.path === "/signup") &&
+        user &&
+        user.emailVerified
+    ) {
+        return <Redirect to="/" />;
+    }
 
     return (
-        // loading ? (
-        //   <div>Loading</div>
-        // ) : (
         <Route
             {...rest}
             render={(props) => (

@@ -14,29 +14,34 @@ const AuthDispatchContext = createContext(undefined);
 const AuthProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    const userRegister = (values) => {
-        firebase
+    const userRegister = async (values) => {
+        await firebase
             .auth()
             .createUserWithEmailAndPassword(values.email, values.password)
-            .then((credential) => {
+            .then(async (credential) => {
                 if (credential) {
-                    firebase
-                        .firestore()
-                        .collection("users")
-                        .doc(credential.user.uid)
-                        .set({
-                            email: values.email,
-                            country: values.country,
-                            firstName: values.firstName,
-                            lastName: values.lastName,
-                        })
-                        .then(() => console.log("success"))
-                        .catch((error) => showMessage(error.message, "error"));
+                    const payload = {
+                        email: values.email,
+                        country: values.country,
+                        firstName: values.firstName,
+                        lastName: values.lastName,
+                    };
+                    await addUserToCollection(credential.user.uid, payload);
                 }
             })
             .catch((error) => {
                 showMessage(error.message, "error");
             });
+    };
+
+    const addUserToCollection = async (uid, payload) => {
+        await firebase
+            .firestore()
+            .collection("users")
+            .doc(uid)
+            .set(payload)
+            .then(() => console.log("success"))
+            .catch((error) => showMessage(error.message, "error"));
     };
 
     const userLogin = (email, password, isSubmitting) => {
@@ -68,8 +73,30 @@ const AuthProvider = ({ children }) => {
                     ? facebook
                     : twitter
             )
-            .then((e) => {
-                return;
+            .then(async (newUser) => {
+                await firebase
+                    .firestore()
+                    .collection("users")
+                    .doc(newUser.user.uid)
+                    .get()
+                    .then(async (user) => {
+                        if (!user.exists) {
+                            const payload = {
+                                email: newUser.additionalUserInfo.profile.email,
+                                country: "",
+                                firstName:
+                                    newUser.additionalUserInfo.profile
+                                        .given_name,
+                                lastName:
+                                    newUser.additionalUserInfo.profile
+                                        .family_name,
+                            };
+                            await addUserToCollection(
+                                newUser.user.uid,
+                                payload
+                            );
+                        }
+                    });
             })
             .catch((error) => showMessage(error.message, "error"));
     };
@@ -107,6 +134,7 @@ const AuthProvider = ({ children }) => {
                                 type: "SET_USER",
                                 payload: {
                                     ...currentUser.data(),
+                                    emailVerified: user.emailVerified,
                                     key: currentUser.id,
                                 },
                             });
