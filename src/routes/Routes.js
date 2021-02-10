@@ -4,11 +4,10 @@ import { Alert } from "@material-ui/lab";
 import { useAuthState } from "../context/AuthContext";
 
 const Wrapper = ({ component: Component, isPrivate, ...rest }) => {
-    const { user, loading, msg } = useAuthState();
+    const { user, msg } = useAuthState();
 
     if (
         (rest.path === "/login" || rest.path === "/signup") &&
-        user &&
         user.emailVerified
     ) {
         return <Redirect to="/" />;

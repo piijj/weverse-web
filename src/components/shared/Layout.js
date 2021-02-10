@@ -12,6 +12,7 @@ import {
 import styled from "styled-components";
 import { useDataState, useDataDispatch } from "../../context/DataContext";
 import Spinner from "../shared/Spinner";
+import { useAuthState } from "../../context/AuthContext";
 
 const DrawerWrapper = styled(Drawer)`
     top: 75px !important;
@@ -80,8 +81,19 @@ const Shop = styled.div`
     align-items: center;
 `;
 
-const DrawerContainer = ({ children }) => {
-    const { artists, shops, artist, loading } = useDataState();
+const Body = styled.div`
+    margin: 30px;
+`;
+
+const Layout = ({ children }) => {
+    const {
+        artists,
+        shops,
+        artist,
+        shop,
+        loading: dataLoading,
+    } = useDataState();
+    const { loading: authLoading } = useAuthState();
     const { handleSelectArtist, handleSelectShop } = useDataDispatch();
     const [isOpen, setIsOpen] = useState(false);
 
@@ -113,10 +125,10 @@ const DrawerContainer = ({ children }) => {
                 </ToolbarWrapper>
             </AppBar>
 
-            {loading ? (
+            {authLoading || dataLoading ? (
                 <Spinner />
             ) : (
-                <>
+                <Body>
                     {children}
 
                     <DrawerWrapper
@@ -152,11 +164,13 @@ const DrawerContainer = ({ children }) => {
                                     {artist === data && (
                                         <RadioGroup
                                             name="shop"
-                                            onChange={(e) =>
+                                            defaultValue={shop ? shop.id : ""}
+                                            onChange={(e) => {
                                                 handleSelectShop(
                                                     shops[e.target.value]
-                                                )
-                                            }
+                                                );
+                                                setIsOpen(false);
+                                            }}
                                         >
                                             {data.shops.map((shop) => (
                                                 <FormControlLabel
@@ -195,10 +209,10 @@ const DrawerContainer = ({ children }) => {
                             ))}
                         </>
                     </DrawerWrapper>
-                </>
+                </Body>
             )}
         </>
     );
 };
 
-export default DrawerContainer;
+export default Layout;
