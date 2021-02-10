@@ -34,6 +34,7 @@ const Group = styled.div`
 
 const Icon = styled.img`
     margin: ${(props) => props.margin};
+    max-width: 170px;
 `;
 
 const ToolbarWrapper = styled(Toolbar)`
@@ -111,7 +112,7 @@ const Layout = ({ children }) => {
                         </IconButton>
                         <Icon
                             margin="0px 0px 0px 16px"
-                            src="images/weverse-logo.svg"
+                            src="images/weverse-shop.png"
                         />
                     </Group>
                     <Group>
