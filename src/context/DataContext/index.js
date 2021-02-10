@@ -31,21 +31,17 @@ const DataProvider = ({ children }) => {
     };
 
     const fetchArtists = async () => {
-        firebase
+        await firebase
             .firestore()
             .collection("artists")
+            .orderBy("name")
             .get()
             .then((querySnapshot) => {
                 if (!querySnapshot.empty) {
-                    const artists = querySnapshot.docs.map((doc) => {
-                        const data = doc.data();
-                        const shops = data.shopIds.map((shop) => shop.id);
-                        return {
-                            ...data,
-                            shops,
-                        };
-                    });
-
+                    const artists = querySnapshot.docs.map((doc) => ({
+                        ...doc.data(),
+                        id: doc.id,
+                    }));
                     dispatch({ type: "SET_ARTISTS", payload: artists });
                 }
             });
@@ -55,7 +51,7 @@ const DataProvider = ({ children }) => {
         await dispatch({ type: "SET_LOADING", payload: true });
         await fetchShops();
         await fetchArtists();
-        await dispatch({ type: "SET_LOADING", payload: false });
+        await dispatch({ type: "AUTO_SELECT_ARTIST_AND_SHOP" });
     };
 
     const handleSelectArtist = (artist) => {

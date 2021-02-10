@@ -173,7 +173,7 @@ const Layout = ({ children }) => {
                                                 setIsOpen(false);
                                             }}
                                         >
-                                            {data.shops.map((shop) => (
+                                            {data.shopIds.map((shop) => (
                                                 <FormControlLabel
                                                     value={shop}
                                                     control={

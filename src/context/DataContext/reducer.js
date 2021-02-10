@@ -15,6 +15,7 @@ export default (state, action) => {
                 ...state,
                 artist: action.payload,
                 shop: null,
+                products: [],
             };
         case "SET_SHOP":
             return {
@@ -25,6 +26,13 @@ export default (state, action) => {
             return {
                 ...state,
                 loading: action.payload,
+            };
+        case "AUTO_SELECT_ARTIST_AND_SHOP":
+            return {
+                ...state,
+                artist: state.artists[0],
+                shop: state.shops[state.artists[0].shopIds[0]],
+                loading: false,
             };
         default:
             return state;
