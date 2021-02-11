@@ -13,6 +13,7 @@ import styled from "styled-components";
 import { useDataState, useDataDispatch } from "../../context/DataContext";
 import Spinner from "../shared/Spinner";
 import { useAuthState } from "../../context/AuthContext";
+import { useHistory } from "react-router-dom";
 
 const DrawerWrapper = styled(Drawer)`
     top: 75px !important;
@@ -99,7 +100,7 @@ const Layout = ({ children }) => {
     const { loading: authLoading } = useAuthState();
     const { handleSelectArtist, handleSelectShop } = useDataDispatch();
     const [isOpen, setIsOpen] = useState(false);
-
+    const history = useHistory();
     return (
         <>
             <AppBar position="static" color="secondary">
@@ -123,7 +124,10 @@ const Layout = ({ children }) => {
                             margin="0px 25px"
                             src="images/notifications.svg"
                         />
-                        <img src="images/settings.svg" />
+                        <img
+                            src="images/settings.svg"
+                            onClick={() => history.push("/add")}
+                        />
                     </Group>
                 </ToolbarWrapper>
             </AppBar>

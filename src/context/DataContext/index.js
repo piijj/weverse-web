@@ -68,6 +68,19 @@ const DataProvider = ({ children }) => {
             });
     };
 
+    const handleAddProduct = async (payload) => {
+        const values = {
+            ...payload,
+            artistIds: payload.artistIds.map((a) => a.id),
+        };
+        await firebase
+            .firestore()
+            .collection("products")
+            .add(values)
+            .then(() => alert("success"))
+            .catch((e) => alert(e.message));
+    };
+
     const loadData = async () => {
         await dispatch({ type: "SET_LOADING", payload: true });
         await fetchShops();
@@ -100,6 +113,7 @@ const DataProvider = ({ children }) => {
                     dispatch,
                     handleSelectArtist,
                     handleSelectShop,
+                    handleAddProduct,
                 }}
             >
                 {children}
