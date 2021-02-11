@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
-import { useAuthDispatch } from "../../context/AuthContext";
+import { useAuthDispatch } from "../context/AuthContext";
 import { ArrowBackRounded } from "@material-ui/icons";
 import { Button } from "@material-ui/core";
-import UserInformationForm from "./UserDetails";
-import PasswordForm from "./PasswordForm";
-import EmailForm from "./EmailForm";
-import TermsAndConditions from "./TermsAndConditions";
-import EmailVerification from "./EmailVerification";
+import UserInformationForm from "../components/Signup/UserDetails";
+import PasswordForm from "../components/Signup/PasswordForm";
+import EmailForm from "../components/Signup/EmailForm";
+import TermsAndConditions from "../components/Signup/TermsAndConditions";
+import EmailVerification from "../components/Signup/EmailVerification";
 
 const descriptions = [
     "Enter an email to use for your Weverse Account.",
