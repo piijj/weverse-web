@@ -61,7 +61,7 @@ const DataProvider = ({ children }) => {
                         ...doc.data(),
                         id: doc.id,
                     }));
-                    dispatch({ type: "SET_PRODCUTS", payload: products });
+                    dispatch({ type: "SET_PRODUCTS", payload: products });
                 }
             });
     };

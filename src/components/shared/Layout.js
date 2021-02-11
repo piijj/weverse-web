@@ -83,7 +83,9 @@ const Shop = styled.div`
 `;
 
 const Body = styled.div`
-    margin: 30px;
+    margin: 40px auto;
+    max-width: 1136px;
+    padding: 0px 48px;
 `;
 
 const Layout = ({ children }) => {
@@ -147,7 +149,7 @@ const Layout = ({ children }) => {
                                 Artists
                             </Text>
                             {artists.map((data, index) => (
-                                <>
+                                <div key={data.id}>
                                     <ArtistWrapper
                                         key={index}
                                         onClick={() => handleSelectArtist(data)}
@@ -175,6 +177,7 @@ const Layout = ({ children }) => {
                                         >
                                             {data.shopIds.map((shop) => (
                                                 <FormControlLabel
+                                                    key={shop}
                                                     value={shop}
                                                     control={
                                                         <Radio color="primary" />
@@ -206,7 +209,7 @@ const Layout = ({ children }) => {
                                             ))}
                                         </RadioGroup>
                                     )}
-                                </>
+                                </div>
                             ))}
                         </>
                     </DrawerWrapper>

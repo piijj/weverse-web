@@ -3,6 +3,8 @@ import { Chip } from "@material-ui/core";
 import styled from "styled-components";
 import { useDataState } from "../context/DataContext";
 import Layout from "../components/shared/Layout";
+import Featured from "../components/Home/Featured";
+import Products from "../components/Home/Products";
 
 const Text = styled.div`
     font-size: ${(props) => props.fontSize || 14}px;
@@ -44,6 +46,8 @@ const Home = () => {
                     <ChipWrapper size="small" label={shop.name} />
                 </Shop>
             )}
+            <Featured />
+            <Products />
         </Layout>
     );
 };

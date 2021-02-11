@@ -3,7 +3,7 @@ import reducer from "./reducer";
 import firebase, { facebook, twitter, google } from "../../api/firebase";
 
 const initialState = {
-    user: undefined,
+    user: {},
     loading: true,
     msg: undefined,
 };
