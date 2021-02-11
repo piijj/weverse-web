@@ -52,15 +52,17 @@ const DataProvider = ({ children }) => {
         await firebase
             .firestore()
             .collection("products")
-            .where("artistId", "==", state.artist.id)
-            .where("shopsAvailableIn", "array-contains", state.shop.id)
+            .where("artistIds", "array-contains", state.artist.id)
             .get()
             .then((querySnapshot) => {
                 if (!querySnapshot.empty) {
-                    const products = querySnapshot.docs.map((doc) => ({
-                        ...doc.data(),
-                        id: doc.id,
-                    }));
+                    const products = [];
+                    querySnapshot.docs.forEach((doc) => {
+                        const data = doc.data();
+                        if (data.shopsAvailableIn.includes(state.shop.id)) {
+                            products.push({ ...data, id: doc.data });
+                        }
+                    });
                     dispatch({ type: "SET_PRODUCTS", payload: products });
                 }
             });
