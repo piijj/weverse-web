@@ -1,13 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-    CardActionArea,
-    CardContent,
-    Grid,
-    Tab,
-    Tabs,
-} from "@material-ui/core";
+import { CardActionArea, CardContent, Grid } from "@material-ui/core";
 import styled from "styled-components";
 import { useDataState } from "../../context/DataContext";
+import Categories from "../shared/Categories";
 
 const Text = styled.div`
     font-size: ${(props) => props.fontSize || 14}px;
@@ -16,10 +11,6 @@ const Text = styled.div`
     font-weight: ${(props) => props.fontWeight || "normal"};
     line-height: ${(props) => props.lineHeight || 1.4};
     margin: ${(props) => props.margin || "5px 0px"};
-`;
-
-const Category = styled(Tab)`
-    min-width: auto !important;
 `;
 
 const Image = styled.img`
@@ -70,16 +61,11 @@ const Products = () => {
             <Text fontSize={20} fontWeight="bold">
                 Shop
             </Text>
-            <Tabs
+            <Categories
                 value={category}
-                indicatorColor="primary"
-                textColor="primary"
                 onChange={(_, value) => setCategory(value)}
-            >
-                {categories.map((c) => (
-                    <Category key={c} label={c.toUpperCase()} value={c} />
-                ))}
-            </Tabs>
+                orientation="horizontal"
+            />
             <List container spacing={3}>
                 {products
                     .filter((p) => p.category === category)
