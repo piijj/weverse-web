@@ -10,6 +10,8 @@ const initialState = {
     shop: null,
     products: [],
     loading: true,
+    product: null,
+    productLoading: true,
 };
 
 const DataStateContext = createContext(initialState);
@@ -75,6 +77,24 @@ const DataProvider = ({ children }) => {
             });
     };
 
+    const fetchProduct = async (id) => {
+        !state.productLoading &&
+            (await dispatch({ type: "SET_PRODUCT_LOADING", payload: true }));
+        await firebase
+            .firestore()
+            .collection("products")
+            .doc(id)
+            .get()
+            .then((product) => {
+                if (product.exists) {
+                    dispatch({
+                        type: "SET_PRODUCT",
+                        payload: { ...product.data(), id: product.id },
+                    });
+                }
+            });
+    };
+
     const handleAddProduct = async (payload) => {
         const values = {
             ...payload,
@@ -122,6 +142,7 @@ const DataProvider = ({ children }) => {
                     handleSelectArtist,
                     handleSelectShop,
                     handleAddProduct,
+                    fetchProduct,
                 }}
             >
                 {children}

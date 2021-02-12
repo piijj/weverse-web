@@ -65,6 +65,7 @@ const theme = createMuiTheme({
                 height: "52px",
                 padding: "0px 12px",
                 textAlign: "center",
+                lineHeight: "0px",
                 transition: "all 0.5s ease-out 0s",
                 "&$disabled": {
                     background: "rgb(228, 230, 234) !important",

@@ -16,11 +16,12 @@ const Text = styled.div`
 `;
 
 const List = styled(Tabs)`
-    width: fit-content;
+    width: ${(props) =>
+        props.orientation === "vertical" ? "250px" : "fit-content"};
 
-    & .PrivateTabIndicator-colorPrimary-2 {
-        background-color: ${(props) =>
-            props.orientation === "vertical" ? "transparent" : "#0BE6C1"};
+    & .MuiTab-wrapper {
+        flex-direction: inherit;
+        justify-content: left;
     }
 `;
 
@@ -33,6 +34,12 @@ const Categories = ({ onChange, orientation, value }) => {
             indicatorColor="primary"
             textColor="primary"
             onChange={onChange}
+            TabIndicatorProps={{
+                style: {
+                    background:
+                        orientation === "vertical" ? "transparent" : "#0BE6C1",
+                },
+            }}
         >
             {categories.map((c) => (
                 <Category

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { CardActionArea, CardContent, Grid } from "@material-ui/core";
 import styled from "styled-components";
 import { useDataState } from "../../context/DataContext";
+import { useHistory } from "react-router-dom";
 import Categories from "../shared/Categories";
 
 const Text = styled.div`
@@ -51,6 +52,7 @@ const List = styled(Grid)`
 const Products = () => {
     const { products, categories } = useDataState();
     const [category, setCategory] = useState("");
+    const history = useHistory();
 
     useEffect(() => {
         setCategory(categories[0]);
@@ -70,7 +72,13 @@ const Products = () => {
                 {products
                     .filter((p) => p.category === category)
                     .map((product) => (
-                        <Grid key={product.id} item>
+                        <Grid
+                            key={product.id}
+                            item
+                            onClick={() =>
+                                history.push(`/product/${product.id}`)
+                            }
+                        >
                             <Card>
                                 <Image src={product.displayPic} />
                                 <CardContent>

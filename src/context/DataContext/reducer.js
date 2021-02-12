@@ -40,6 +40,18 @@ export default (state, action) => {
                 shop: state.shops[state.artists[0].shopIds[0]],
                 loading: false,
             };
+
+        case "SET_PRODUCT_LOADING":
+            return {
+                ...state,
+                productLoading: true,
+            };
+        case "SET_PRODUCT":
+            return {
+                ...state,
+                product: action.payload,
+                productLoading: false,
+            };
         default:
             return state;
     }

@@ -21,6 +21,7 @@ const List = styled(Grid)`
     overflow-y: auto;
     flex-wrap: nowrap;
     margin: 30px 0px;
+    width: auto;
 `;
 
 const Home = () => {

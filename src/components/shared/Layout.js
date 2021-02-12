@@ -8,6 +8,7 @@ import {
     Toolbar,
     FormControlLabel,
     RadioGroup,
+    Chip,
 } from "@material-ui/core";
 import styled from "styled-components";
 import { useDataState, useDataDispatch } from "../../context/DataContext";
@@ -89,6 +90,14 @@ const Body = styled.div`
     padding: 0px 48px;
 `;
 
+const ChipWrapper = styled(Chip)`
+    background-color: #000;
+    color: #fff;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-left: 10px;
+`;
+
 const Layout = ({ children }) => {
     const {
         artists,
@@ -111,21 +120,21 @@ const Layout = ({ children }) => {
                             color="inherit"
                             onClick={() => setIsOpen(!isOpen)}
                         >
-                            <img src="images/menu.svg" />
+                            <img src="/images/menu.svg" />
                         </IconButton>
                         <Icon
                             margin="0px 0px 0px 16px"
-                            src="images/weverse-shop.png"
+                            src="/images/weverse-shop.png"
                         />
                     </Group>
                     <Group>
-                        <img src="images/account.svg" />
+                        <img src="/images/account.svg" />
                         <Icon
                             margin="0px 25px"
-                            src="images/notifications.svg"
+                            src="/images/notifications.svg"
                         />
                         <img
-                            src="images/settings.svg"
+                            src="/images/settings.svg"
                             onClick={() => history.push("/add")}
                         />
                     </Group>
@@ -136,6 +145,17 @@ const Layout = ({ children }) => {
                 <Spinner />
             ) : (
                 <Body>
+                    <Shop>
+                        <Text
+                            fontFamily="Noto Sans KR, sans-serif"
+                            fontSize="30"
+                            fontWeight="bold"
+                            letterSpacing="-0.5px"
+                        >
+                            {artist.name}
+                        </Text>
+                        <ChipWrapper size="small" label={shop.name} />
+                    </Shop>
                     {children}
 
                     <DrawerWrapper
@@ -146,7 +166,7 @@ const Layout = ({ children }) => {
                     >
                         <>
                             <Text
-                                fontSize="13px"
+                                fontSize="13"
                                 fontWeight="bold"
                                 color="rgb(173, 177, 184)"
                             >
