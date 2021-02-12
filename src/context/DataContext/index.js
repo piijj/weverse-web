@@ -60,7 +60,7 @@ const DataProvider = ({ children }) => {
                     querySnapshot.docs.forEach((doc) => {
                         const data = doc.data();
                         if (data.shopsAvailableIn.includes(state.shop.id)) {
-                            products.push({ ...data, id: doc.data });
+                            products.push({ ...data, id: doc.id });
                         }
                     });
                     dispatch({ type: "SET_PRODUCTS", payload: products });
@@ -71,6 +71,7 @@ const DataProvider = ({ children }) => {
     const handleAddProduct = async (payload) => {
         const values = {
             ...payload,
+            description: payload.description.split(", "),
             artistIds: payload.artistIds.map((a) => a.id),
         };
         await firebase
