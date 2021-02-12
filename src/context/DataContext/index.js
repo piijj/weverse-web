@@ -5,6 +5,7 @@ import firebase from "../../api/firebase";
 const initialState = {
     artists: [],
     shops: {},
+    categories: [],
     artist: null,
     shop: null,
     products: [],
@@ -63,7 +64,13 @@ const DataProvider = ({ children }) => {
                             products.push({ ...data, id: doc.id });
                         }
                     });
-                    dispatch({ type: "SET_PRODUCTS", payload: products });
+                    const categories = [
+                        ...new Set(products.map((product) => product.category)),
+                    ];
+                    dispatch({
+                        type: "SET_PRODUCTS",
+                        payload: { products, categories },
+                    });
                 }
             });
     };

@@ -58,15 +58,8 @@ const List = styled(Grid)`
 `;
 
 const Products = () => {
-    const { products } = useDataState();
-    const [categories, setCategories] = useState([]);
+    const { products, categories } = useDataState();
     const [category, setCategory] = useState("");
-
-    useEffect(() => {
-        setCategories([
-            ...new Set(products.map((product) => product.category)),
-        ]);
-    }, [products]);
 
     useEffect(() => {
         setCategory(categories[0]);
@@ -81,7 +74,7 @@ const Products = () => {
                 value={category}
                 indicatorColor="primary"
                 textColor="primary"
-                onChange={(e, value) => setCategory(value)}
+                onChange={(_, value) => setCategory(value)}
             >
                 {categories.map((c) => (
                     <Category key={c} label={c.toUpperCase()} value={c} />

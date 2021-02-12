@@ -25,7 +25,8 @@ export default (state, action) => {
         case "SET_PRODUCTS":
             return {
                 ...state,
-                products: action.payload,
+                products: action.payload.products,
+                categories: action.payload.categories,
             };
         case "SET_LOADING":
             return {
