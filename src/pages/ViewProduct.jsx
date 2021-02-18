@@ -47,10 +47,10 @@ const Bullet = styled.div`
 
 const Circle = styled.div`
     color: red;
-    margin: 20px 5px 0px 5px;
-    background: red;
-    width: 3px;
-    height: 3px;
+    margin: ${(props) => props.margin || "20px 5px 0px 5px"};
+    background: ${(props) => props.color || "red"};
+    width: ${(props) => props.size || "3px"};
+    height: ${(props) => props.size || "3px"};
     border-radius: 50%;
     display: inline-table;
 `;
@@ -79,6 +79,12 @@ const DividerWrapper = styled(Divider)`
     margin: 10px 0px 10px 30px;
 `;
 
+const Badges = styled.div`
+    display: flex;
+    align-items: center;
+    margin: 10px 0px 10px 30px;
+`;
+
 const ViewProduct = () => {
     const { productLoading, product, shop } = useDataState();
     const { fetchProduct } = useDataDispatch();
@@ -103,6 +109,47 @@ const ViewProduct = () => {
                         <Details>
                             <Image src={product.displayPic} />
                             <div>
+                                <Badges>
+                                    {product.isMembersOnly && (
+                                        <>
+                                            <img
+                                                src="/images/weverse-membership.svg"
+                                                width={25}
+                                            />
+                                            &nbsp;
+                                            <Text
+                                                fontSize={16}
+                                                color="#9557F7"
+                                                margin="10px 0px"
+                                            >
+                                                ONLY
+                                            </Text>
+                                        </>
+                                    )}
+                                    {product.isMembersOnly &&
+                                        product.isExclusive && (
+                                            <Circle
+                                                size="5px"
+                                                color="#bdc0c5"
+                                                margin="0px 15px"
+                                            />
+                                        )}
+                                    {product.isExclusive && (
+                                        <>
+                                            <img
+                                                src="/images/exclusive.svg"
+                                                width={15}
+                                            />
+                                            <Text
+                                                fontSize={16}
+                                                margin="10px 10px"
+                                                color="#0BE6C1"
+                                            >
+                                                EXCLUSIVE
+                                            </Text>
+                                        </>
+                                    )}
+                                </Badges>
                                 <Text fontSize={18} margin="10px 0px 10px 30px">
                                     {product.name}
                                 </Text>
