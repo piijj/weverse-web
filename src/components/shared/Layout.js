@@ -125,6 +125,7 @@ const Layout = ({ children }) => {
                         <Icon
                             margin="0px 0px 0px 16px"
                             src="/images/weverse-shop.png"
+                            onClick={() => history.push("/")}
                         />
                     </Group>
                     <Group>
