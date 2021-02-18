@@ -37,6 +37,7 @@ const Group = styled.div`
 const Icon = styled.img`
     margin: ${(props) => props.margin};
     max-width: 170px;
+    cursor: pointer;
 `;
 
 const ToolbarWrapper = styled(Toolbar)`
@@ -129,12 +130,12 @@ const Layout = ({ children }) => {
                         />
                     </Group>
                     <Group>
-                        <img src="/images/account.svg" />
+                        <Icon src="/images/account.svg" />
                         <Icon
                             margin="0px 25px"
                             src="/images/notifications.svg"
                         />
-                        <img
+                        <Icon
                             src="/images/settings.svg"
                             onClick={() => history.push("/add")}
                         />
