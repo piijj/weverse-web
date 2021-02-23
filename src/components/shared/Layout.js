@@ -132,7 +132,12 @@ const Layout = ({ children }) => {
                     <Group>
                         <Icon src="/images/account.svg" />
                         <Icon
-                            margin="0px 25px"
+                            src="/images/cart.svg"
+                            width={45}
+                            margin="10px 15px 0px 25px"
+                        />
+                        <Icon
+                            margin="0px 25px 0px 0px"
                             src="/images/notifications.svg"
                         />
                         <Icon
