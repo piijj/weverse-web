@@ -1,8 +1,15 @@
-import React, { useEffect } from "react";
-import { Button, Divider } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import {
+    Button,
+    Divider,
+    OutlinedInput,
+    Modal,
+    Paper,
+} from "@material-ui/core";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { useDataDispatch, useDataState } from "../context/DataContext";
+import { useAuthDispatch } from "../context/AuthContext";
 import Layout from "../components/shared/Layout";
 import Spinner from "../components/shared/Spinner";
 import Categories from "../components/shared/Categories";
@@ -16,6 +23,7 @@ const Text = styled.div`
     font-weight: ${(props) => props.fontWeight || "normal"};
     line-height: ${(props) => props.lineHeight || 1.4};
     margin: ${(props) => props.margin || "10px 0px"};
+    text-align: ${(props) => props.textAlign};
 `;
 
 const CategoriesWrapper = styled.div`
@@ -85,10 +93,58 @@ const Badges = styled.div`
     margin: 10px 0px 10px 30px;
 `;
 
+const QtyWrapper = styled(OutlinedInput)`
+    margin: 10px 30px;
+    width: 100px;
+`;
+
+const PaperWrapper = styled(Paper)`
+    width: 400px;
+    height: 320px;
+    margin: 15% auto;
+    border-radius: 5px;
+    outline: none;
+    padding: 80px 30px 0px;
+    box-sizing: border-box;
+    position: relative;
+`;
+
+const Check = styled.img`
+    left: 155px;
+    top: -50px;
+    width: 100px;
+    position: absolute;
+`;
+
+const ModalButton = styled(Button)`
+    width: 100%;
+    background: ${(props) => props.bg};
+    color: ${(props) =>
+        props.bg === "transparent"
+            ? "rgb(11, 230, 193)"
+            : "rgb(255, 255, 255)"};
+    text-transform: inherit;
+    border-radius: 5px;
+    height: 40px;
+    margin: ${(props) => props.margin};
+`;
+
 const ViewProduct = () => {
     const { productLoading, product, shop } = useDataState();
     const { fetchProduct } = useDataDispatch();
+    const { handleAddToCart } = useAuthDispatch();
     const { id } = useParams();
+    const [qty, setQty] = useState(1);
+    const [loading, isLoading] = useState(false);
+    const [modal, showModal] = useState(false);
+
+    const addToCart = async () => {
+        await isLoading(true);
+        await handleAddToCart({ qty, productId: product.id, shopId: shop.id });
+        await isLoading(false);
+        await showModal(true);
+    };
+
     useEffect(() => {
         fetchProduct(id);
     }, []);
@@ -99,6 +155,27 @@ const ViewProduct = () => {
                 <Spinner />
             ) : (
                 <Body>
+                    <Modal open={modal} onClose={() => showModal(false)}>
+                        <PaperWrapper>
+                            <Check src="/images/check.svg" />
+                            <Text
+                                fontSize={16}
+                                margin="10px 0px 40px"
+                                textAlign="center"
+                            >
+                                Added to Cart
+                            </Text>
+                            <Divider />
+                            <ModalButton
+                                bg="transparent"
+                                margin="40px 0px 20px"
+                                onClick={() => showModal(false)}
+                            >
+                                Continue Shopping
+                            </ModalButton>
+                            <ModalButton>Go to Cart</ModalButton>
+                        </PaperWrapper>
+                    </Modal>
                     <CategoriesWrapper>
                         <Categories
                             value={product.category}
@@ -168,8 +245,17 @@ const ViewProduct = () => {
                                     Weverse Shop Cash ₩
                                     {getPoints(product.price)}
                                 </Text>
+                                <QtyWrapper
+                                    type="number"
+                                    value={qty}
+                                    onChange={(e) => setQty(e.target.value)}
+                                />
                                 <ButtonGroup>
-                                    <ButtonWrapper margin="10px 10px 10px 30px">
+                                    <ButtonWrapper
+                                        margin="10px 10px 10px 30px"
+                                        disabled={loading}
+                                        onClick={addToCart}
+                                    >
                                         Add To Cart
                                     </ButtonWrapper>
                                     <ButtonWrapper margin="10px 0px 10px 30px">

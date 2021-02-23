@@ -135,7 +135,7 @@ const AuthProvider = ({ children }) => {
                                 payload: {
                                     ...currentUser.data(),
                                     emailVerified: user.emailVerified,
-                                    key: currentUser.id,
+                                    id: currentUser.id,
                                 },
                             });
                         }
@@ -146,6 +146,20 @@ const AuthProvider = ({ children }) => {
         });
     }, []);
 
+    //product => qty, product id, shop id
+    const handleAddToCart = async (product) => {
+        const payload = {
+            userId: state.user.id,
+            ...product,
+        };
+        await firebase
+            .firestore()
+            .collection("cartItems")
+            .add(payload)
+            .then(() => console.log("doneeee"))
+            .catch((error) => showMessage(error.message, "error"));
+    };
+
     return (
         <AuthStateContext.Provider value={state}>
             <AuthDispatchContext.Provider
@@ -155,6 +169,7 @@ const AuthProvider = ({ children }) => {
                     userLoginWithSocialMedia,
                     userRegister,
                     resendEmailVerification,
+                    handleAddToCart,
                 }}
             >
                 {children}
