@@ -8,6 +8,7 @@ const Wrapper = ({ component: Component, isPrivate, ...rest }) => {
 
     if (
         (rest.path === "/login" || rest.path === "/signup") &&
+        user &&
         user.emailVerified
     ) {
         return <Redirect to="/" />;

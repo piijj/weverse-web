@@ -1,4 +1,5 @@
 import React, { useEffect, useContext, createContext, useReducer } from "react";
+import { useHistory } from "react-router-dom";
 import reducer from "./reducer";
 import firebase, { facebook, twitter, google } from "../../api/firebase";
 
@@ -13,6 +14,7 @@ const AuthDispatchContext = createContext(undefined);
 
 const AuthProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
+    const history = useHistory();
 
     const userRegister = async (values) => {
         await firebase
@@ -142,6 +144,7 @@ const AuthProvider = ({ children }) => {
                     });
             } else {
                 dispatch({ type: "SET_USER", payload: undefined });
+                history.push("/login");
             }
         });
     }, []);
