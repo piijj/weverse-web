@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { Formik } from "formik";
-import { useAuthDispatch } from "../context/AuthContext";
+import { useUserDispatch } from "../context/UserContext";
 import { OutlinedInput, Button } from "@material-ui/core";
 import { Error } from "@material-ui/icons";
 import * as Yup from "yup";
@@ -95,7 +95,7 @@ const loginSchema = Yup.object().shape({
 });
 
 const Login = () => {
-    const { userLogin, userLoginWithSocialMedia } = useAuthDispatch();
+    const { userLogin, userLoginWithSocialMedia } = useUserDispatch();
     const history = useHistory();
 
     return (

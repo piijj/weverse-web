@@ -9,10 +9,10 @@ const initialState = {
     msg: undefined,
 };
 
-const AuthStateContext = createContext(initialState);
-const AuthDispatchContext = createContext(undefined);
+const UserStateContext = createContext(initialState);
+const UserDispatchContext = createContext(undefined);
 
-const AuthProvider = ({ children }) => {
+const UserProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const history = useHistory();
 
@@ -164,8 +164,8 @@ const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthStateContext.Provider value={state}>
-            <AuthDispatchContext.Provider
+        <UserStateContext.Provider value={state}>
+            <UserDispatchContext.Provider
                 value={{
                     dispatch,
                     userLogin,
@@ -176,27 +176,27 @@ const AuthProvider = ({ children }) => {
                 }}
             >
                 {children}
-            </AuthDispatchContext.Provider>
-        </AuthStateContext.Provider>
+            </UserDispatchContext.Provider>
+        </UserStateContext.Provider>
     );
 };
 
-export const useAuthState = () => {
-    const authStateContext = useContext(AuthStateContext);
-    if (authStateContext === undefined) {
-        throw new Error("authStateContext must be used within a AuthProvider");
+export const useUserState = () => {
+    const userStateContext = useContext(UserStateContext);
+    if (userStateContext === undefined) {
+        throw new Error("userStateContext must be used within a UserProvider");
     }
-    return authStateContext;
+    return userStateContext;
 };
 
-export const useAuthDispatch = () => {
-    const authDispatchContext = useContext(AuthDispatchContext);
-    if (authDispatchContext === undefined) {
+export const useUserDispatch = () => {
+    const userDispatchContext = useContext(UserDispatchContext);
+    if (userDispatchContext === undefined) {
         throw new Error(
-            "authDispatchContext must be used within a AuthProvider"
+            "userDispatchContext must be used within a UserProvider"
         );
     }
-    return authDispatchContext;
+    return userDispatchContext;
 };
 
-export default AuthProvider;
+export default UserProvider;

@@ -1,10 +1,10 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import { Alert } from "@material-ui/lab";
-import { useAuthState } from "../context/AuthContext";
+import { useUserState } from "../context/UserContext";
 
 const Wrapper = ({ component: Component, isPrivate, ...rest }) => {
-    const { user, msg } = useAuthState();
+    const { user, msg } = useUserState();
 
     if (
         (rest.path === "/login" || rest.path === "/signup") &&

@@ -9,7 +9,7 @@ import {
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import { useDataDispatch, useDataState } from "../context/DataContext";
-import { useAuthDispatch } from "../context/AuthContext";
+import { useUserDispatch } from "../context/UserContext";
 import Layout from "../components/shared/Layout";
 import Spinner from "../components/shared/Spinner";
 import Categories from "../components/shared/Categories";
@@ -132,7 +132,7 @@ const ModalButton = styled(Button)`
 const ViewProduct = () => {
     const { productLoading, product, shop } = useDataState();
     const { fetchProduct } = useDataDispatch();
-    const { handleAddToCart } = useAuthDispatch();
+    const { handleAddToCart } = useUserDispatch();
     const { id } = useParams();
     const [qty, setQty] = useState(1);
     const [loading, isLoading] = useState(false);

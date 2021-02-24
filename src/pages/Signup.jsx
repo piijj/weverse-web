@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
-import { useAuthDispatch } from "../context/AuthContext";
+import { useUserDispatch } from "../context/UserContext";
 import { ArrowBackRounded } from "@material-ui/icons";
 import { Button } from "@material-ui/core";
 import UserInformationForm from "../components/Signup/UserDetails";
@@ -105,7 +105,7 @@ const BackIcon = styled(ArrowBackRounded)`
 `;
 
 const SignupWithEmail = ({ signUpWithEmail }) => {
-    const { userRegister } = useAuthDispatch();
+    const { userRegister } = useUserDispatch();
     const [step, setStep] = useState(1);
     const [userDetails, setUserDetails] = useState({ email: "" });
 
@@ -164,7 +164,7 @@ const SignupWithEmail = ({ signUpWithEmail }) => {
 };
 
 const Signup = () => {
-    const { userLoginWithSocialMedia } = useAuthDispatch();
+    const { userLoginWithSocialMedia } = useUserDispatch();
     const [withEmail, signUpWithEmail] = useState(false);
     const history = useHistory();
 

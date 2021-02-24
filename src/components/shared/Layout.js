@@ -13,7 +13,7 @@ import {
 import styled from "styled-components";
 import { useDataState, useDataDispatch } from "../../context/DataContext";
 import Spinner from "../shared/Spinner";
-import { useAuthState } from "../../context/AuthContext";
+import { useUserState } from "../../context/UserContext";
 import { useHistory } from "react-router-dom";
 
 const DrawerWrapper = styled(Drawer)`
@@ -107,7 +107,7 @@ const Layout = ({ children }) => {
         shop,
         loading: dataLoading,
     } = useDataState();
-    const { loading: authLoading } = useAuthState();
+    const { loading: userLoading } = useUserState();
     const { handleSelectArtist, handleSelectShop } = useDataDispatch();
     const [isOpen, setIsOpen] = useState(false);
     const history = useHistory();
@@ -148,7 +148,7 @@ const Layout = ({ children }) => {
                 </ToolbarWrapper>
             </AppBar>
 
-            {authLoading || dataLoading ? (
+            {userLoading || dataLoading ? (
                 <Spinner />
             ) : (
                 <Body>

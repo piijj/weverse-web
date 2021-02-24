@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Button } from "@material-ui/core";
-import { useAuthDispatch } from "../../context/AuthContext";
+import { useUserDispatch } from "../../context/UserContext";
 
 const Text = styled.div`
     font-size: ${(props) => props.fontSize || 14}px;
@@ -29,7 +29,7 @@ const Image = styled.img`
 `;
 
 const EmailVerification = ({ userDetails }) => {
-    const { resendEmailVerification } = useAuthDispatch();
+    const { resendEmailVerification } = useUserDispatch();
     return (
         <>
             <Text fontSize={16} margin="0px 0px 8px">
