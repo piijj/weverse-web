@@ -2,6 +2,7 @@ import React, { useEffect, useContext, createContext, useReducer } from "react";
 import { useHistory } from "react-router-dom";
 import reducer from "./reducer";
 import firebase, { facebook, twitter, google } from "../../api/firebase";
+import { array } from "yup";
 
 const initialState = {
     user: {},
@@ -175,7 +176,7 @@ const UserProvider = ({ children }) => {
                                 cart.push({
                                     product: { ...product.data() },
                                     ...data,
-                                    id: product.id,
+                                    id: doc.id,
                                 });
                             });
                     });
@@ -186,16 +187,29 @@ const UserProvider = ({ children }) => {
 
     //product => qty, product id, shop id
     const handleAddToCart = async (product) => {
-        const payload = {
-            userId: state.user.id,
-            ...product,
-        };
-        await firebase
-            .firestore()
-            .collection("cartItems")
-            .add(payload)
-            .then(() => console.log("doneeee"))
-            .catch((error) => showMessage(error.message, "error"));
+        const oldProduct = state.cart.find(
+            (p) => p.productId === product.productId
+        );
+        if (oldProduct) {
+            await firebase
+                .firestore()
+                .collection("cartItems")
+                .doc(oldProduct.id)
+                .update({ qty: Number(product.qty) + Number(oldProduct.qty) })
+                .then(() => console.log("doneeee"))
+                .catch((error) => showMessage(error.message, "error"));
+        } else {
+            const payload = {
+                userId: state.user.id,
+                ...product,
+            };
+            await firebase
+                .firestore()
+                .collection("cartItems")
+                .add(payload)
+                .then(() => console.log("doneeee"))
+                .catch((error) => showMessage(error.message, "error"));
+        }
     };
 
     return (
