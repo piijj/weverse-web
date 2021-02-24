@@ -9,6 +9,9 @@ import {
     FormControlLabel,
     RadioGroup,
     Chip,
+    Badge,
+    Menu,
+    Button,
 } from "@material-ui/core";
 import styled from "styled-components";
 import { useDataState, useDataDispatch } from "../../context/DataContext";
@@ -99,6 +102,45 @@ const ChipWrapper = styled(Chip)`
     margin-left: 10px;
 `;
 
+const BadgeWrapper = styled(Badge)`
+    & .MuiBadge-badge {
+        right: 35px;
+        top: 15px;
+        color: #ffffff;
+        font-size: 11px;
+        font-weight: bolder;
+        padding-top: 1px;
+    }
+`;
+
+const MenuWrapper = styled(Menu)`
+    & .MuiMenu-paper {
+        top: 80px !important;
+        right: 140px;
+        width: 300px;
+        max-height: 400px;
+        left: auto !important;
+        position: fixed;
+        padding: 0px 10px 10px;
+        box-sizing: border-box;
+    }
+`;
+
+const FlexWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: ${(props) => props.margin};
+`;
+
+const ButtonWrapper = styled(Button)`
+    width: fit-content;
+    padding: 0px 15px;
+    font-size: 10px;
+    height: 20px;
+    float: right;
+`;
+
 const Layout = ({ children }) => {
     const {
         artists,
@@ -107,9 +149,10 @@ const Layout = ({ children }) => {
         shop,
         loading: dataLoading,
     } = useDataState();
-    const { loading: userLoading } = useUserState();
+    const { loading: userLoading, cart } = useUserState();
     const { handleSelectArtist, handleSelectShop } = useDataDispatch();
     const [isOpen, setIsOpen] = useState(false);
+    const [showCart, setShowCart] = useState(false);
     const history = useHistory();
     return (
         <>
@@ -130,12 +173,23 @@ const Layout = ({ children }) => {
                         />
                     </Group>
                     <Group>
-                        <Icon src="/images/account.svg" />
                         <Icon
-                            src="/images/cart.svg"
-                            width={45}
-                            margin="10px 15px 0px 25px"
+                            src="/images/account.svg"
+                            margin="0px 5px 0px 0px"
                         />
+                        <BadgeWrapper
+                            color="primary"
+                            badgeContent={cart.length}
+                        >
+                            <Icon
+                                src="/images/cart.svg"
+                                width={45}
+                                margin="10px 25px 0px 25px"
+                                onClick={() =>
+                                    cart.length > 0 && setShowCart(true)
+                                }
+                            />
+                        </BadgeWrapper>
                         <Icon
                             margin="0px 25px 0px 0px"
                             src="/images/notifications.svg"
@@ -146,6 +200,47 @@ const Layout = ({ children }) => {
                         />
                     </Group>
                 </ToolbarWrapper>
+                <MenuWrapper
+                    keepMounted
+                    open={showCart}
+                    onClose={(e) => setShowCart(false)}
+                >
+                    {cart.map((product) => (
+                        <FlexWrapper margin="0px 0px 5px">
+                            <FlexWrapper>
+                                <img
+                                    src={product.product.displayPic}
+                                    width={50}
+                                />
+                                <div>
+                                    <Text
+                                        fontSize="12"
+                                        fontWeight="bold"
+                                        margin="0px 0px 0px 10px"
+                                    >
+                                        {product.product.name}
+                                    </Text>
+                                    <Text
+                                        fontSize="12"
+                                        fontWeight="bold"
+                                        color="rgb(173, 177, 184)"
+                                        margin="0px 0px 0px 10px"
+                                    >
+                                        x{product.qty}
+                                    </Text>
+                                </div>
+                            </FlexWrapper>
+                            <Text fontSize="12" fontWeight="bold" color="red">
+                                {" "}
+                                ₩
+                                {(
+                                    product.product.price * product.qty
+                                ).toLocaleString()}
+                            </Text>
+                        </FlexWrapper>
+                    ))}
+                    <ButtonWrapper>Checkout</ButtonWrapper>
+                </MenuWrapper>
             </AppBar>
 
             {userLoading || dataLoading ? (

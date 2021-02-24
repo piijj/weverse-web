@@ -7,6 +7,7 @@ const initialState = {
     user: {},
     loading: true,
     msg: undefined,
+    cart: [],
 };
 
 const UserStateContext = createContext(initialState);
@@ -103,6 +104,25 @@ const UserProvider = ({ children }) => {
             .catch((error) => showMessage(error.message, "error"));
     };
 
+    const getUser = (user) => {
+        firebase
+            .firestore()
+            .collection("users")
+            .doc(user.uid)
+            .onSnapshot((currentUser) => {
+                if (currentUser.exists) {
+                    dispatch({
+                        type: "SET_USER",
+                        payload: {
+                            ...currentUser.data(),
+                            emailVerified: user.emailVerified,
+                            id: currentUser.id,
+                        },
+                    });
+                }
+            });
+    };
+
     const userLogout = async () => {
         firebase.auth().signOut();
     };
@@ -124,30 +144,45 @@ const UserProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        firebase.auth().onAuthStateChanged((user) => {
+        firebase.auth().onAuthStateChanged(async (user) => {
             if (user) {
-                firebase
-                    .firestore()
-                    .collection("users")
-                    .doc(user.uid)
-                    .onSnapshot((currentUser) => {
-                        if (currentUser.exists) {
-                            dispatch({
-                                type: "SET_USER",
-                                payload: {
-                                    ...currentUser.data(),
-                                    emailVerified: user.emailVerified,
-                                    id: currentUser.id,
-                                },
-                            });
-                        }
-                    });
+                await getUser(user);
+                await getUserCart(user);
             } else {
                 dispatch({ type: "SET_USER", payload: undefined });
                 history.push("/login");
             }
         });
     }, []);
+
+    const getUserCart = (user) => {
+        firebase
+            .firestore()
+            .collection("cartItems")
+            .where("userId", "==", user.uid)
+            .onSnapshot((querySnapshot) => {
+                if (!querySnapshot.empty) {
+                    const cart = [];
+                    querySnapshot.docs.forEach(async (doc) => {
+                        const data = doc.data();
+                        await firebase
+                            .firestore()
+                            .collection("products")
+                            .doc(data.productId)
+                            .get()
+                            .then((product) => {
+                                console.log(product, { ...product.data() });
+                                cart.push({
+                                    product: { ...product.data() },
+                                    ...data,
+                                    id: product.id,
+                                });
+                            });
+                    });
+                    dispatch({ type: "SET_CART", payload: cart });
+                }
+            });
+    };
 
     //product => qty, product id, shop id
     const handleAddToCart = async (product) => {

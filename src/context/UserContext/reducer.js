@@ -16,6 +16,11 @@ export default (state, action) => {
                 ...state,
                 msg: action.payload,
             };
+        case "SET_CART":
+            return {
+                ...state,
+                cart: action.payload,
+            };
         default:
             return state;
     }
