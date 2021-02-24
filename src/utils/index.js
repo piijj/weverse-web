@@ -9,3 +9,6 @@ export const convertCurrency = (base, to, amount) => {
 };
 
 export const getPoints = (amount) => Math.round(amount / 5000) * 50;
+
+export const getCartProductCount = (cart) =>
+    cart.reduce((a, b) => Number(a) + Number(b.qty), 0);

@@ -14,10 +14,11 @@ import {
     Button,
 } from "@material-ui/core";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 import { useDataState, useDataDispatch } from "../../context/DataContext";
 import Spinner from "../shared/Spinner";
 import { useUserState } from "../../context/UserContext";
-import { useHistory } from "react-router-dom";
+import { getCartProductCount } from "../../utils";
 
 const DrawerWrapper = styled(Drawer)`
     top: 75px !important;
@@ -179,7 +180,7 @@ const Layout = ({ children }) => {
                         />
                         <BadgeWrapper
                             color="primary"
-                            badgeContent={cart.length}
+                            badgeContent={getCartProductCount(cart)}
                         >
                             <Icon
                                 src="/images/cart.svg"
