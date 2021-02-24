@@ -186,18 +186,26 @@ const UserProvider = ({ children }) => {
     };
 
     //product => qty, product id, shop id
-    const handleAddToCart = async (product) => {
+    const handleAddToCart = async (product, showSuccessModal) => {
         const oldProduct = state.cart.find(
             (p) => p.productId === product.productId
         );
         if (oldProduct) {
-            await firebase
-                .firestore()
-                .collection("cartItems")
-                .doc(oldProduct.id)
-                .update({ qty: Number(product.qty) + Number(oldProduct.qty) })
-                .then(() => console.log("doneeee"))
-                .catch((error) => showMessage(error.message, "error"));
+            const qty = Number(product.qty) + Number(oldProduct.qty);
+            if (qty <= oldProduct.product.maxQtyPerOrder) {
+                await firebase
+                    .firestore()
+                    .collection("cartItems")
+                    .doc(oldProduct.id)
+                    .update({ qty })
+                    .then(() => showSuccessModal(true))
+                    .catch((error) => showMessage(error.message, "error"));
+            } else {
+                showMessage(
+                    `You can only order up to ${oldProduct.product.maxQtyPerOrder} pcs.`,
+                    "error"
+                );
+            }
         } else {
             const payload = {
                 userId: state.user.id,
@@ -207,7 +215,7 @@ const UserProvider = ({ children }) => {
                 .firestore()
                 .collection("cartItems")
                 .add(payload)
-                .then(() => console.log("doneeee"))
+                .then(() => showSuccessModal(true))
                 .catch((error) => showMessage(error.message, "error"));
         }
     };

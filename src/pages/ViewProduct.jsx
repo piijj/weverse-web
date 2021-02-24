@@ -140,9 +140,11 @@ const ViewProduct = () => {
 
     const addToCart = async () => {
         await isLoading(true);
-        await handleAddToCart({ qty, productId: product.id, shopId: shop.id });
+        await handleAddToCart(
+            { qty, productId: product.id, shopId: shop.id },
+            showModal
+        );
         await isLoading(false);
-        await showModal(true);
     };
 
     useEffect(() => {
