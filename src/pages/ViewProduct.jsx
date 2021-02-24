@@ -249,6 +249,10 @@ const ViewProduct = () => {
                                     type="number"
                                     value={qty}
                                     onChange={(e) => setQty(e.target.value)}
+                                    inputProps={{
+                                        max: product.maxQtyPerOrder,
+                                        min: 1,
+                                    }}
                                 />
                                 <ButtonGroup>
                                     <ButtonWrapper
