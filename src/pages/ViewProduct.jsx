@@ -8,13 +8,14 @@ import {
 } from "@material-ui/core";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
+import moment from "moment";
 import { useDataDispatch, useDataState } from "../context/DataContext";
 import { useUserDispatch } from "../context/UserContext";
 import Layout from "../components/shared/Layout";
 import Spinner from "../components/shared/Spinner";
 import Categories from "../components/shared/Categories";
+import CurrentShop from "../components/shared/CurrentShop";
 import { getPoints } from "../utils";
-import moment from "moment";
 
 const Text = styled.div`
     font-size: ${(props) => props.fontSize || 14}px;
@@ -32,11 +33,17 @@ const CategoriesWrapper = styled.div`
 
 const Image = styled.img`
     max-width: 500px;
+    @media (max-width: 800px) {
+        margin: 0 auto;
+    }
 `;
 
 const Body = styled.div`
     display: flex;
     justify-content: space-between;
+    @media (max-width: 800px) {
+        flex-wrap: wrap;
+    }
 `;
 
 const Product = styled.div``;
@@ -70,6 +77,7 @@ const Description = styled.div`
 const Details = styled.div`
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 `;
 
 const ButtonWrapper = styled(Button)`
@@ -179,9 +187,14 @@ const ViewProduct = () => {
                         </PaperWrapper>
                     </Modal>
                     <CategoriesWrapper>
+                        <CurrentShop />
                         <Categories
                             value={product.category}
-                            orientation="vertical"
+                            orientation={
+                                window.innerWidth > 800
+                                    ? "vertical"
+                                    : "horizontal"
+                            }
                         />
                     </CategoriesWrapper>
                     <Product>

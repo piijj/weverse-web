@@ -18,6 +18,7 @@ const Text = styled.div`
 const List = styled(Tabs)`
     width: ${(props) =>
         props.orientation === "vertical" ? "250px" : "fit-content"};
+    margin-bottom: 30px;
 
     & .MuiTab-wrapper {
         flex-direction: inherit;

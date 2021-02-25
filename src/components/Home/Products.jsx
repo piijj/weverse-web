@@ -125,7 +125,7 @@ const Products = () => {
                                     </Badges>
                                     <Text fontSize={14}>{product.name}</Text>
                                     <Text fontSize={14} fontWeight="bold">
-                                        {product.price.toLocaleString()}
+                                        ₩{product.price.toLocaleString()}
                                     </Text>
                                 </CardContent>
                             </Card>
