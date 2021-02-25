@@ -95,14 +95,6 @@ const Body = styled.div`
     padding: 0px 48px;
 `;
 
-const ChipWrapper = styled(Chip)`
-    background-color: #000;
-    color: #fff;
-    border-radius: 5px;
-    font-weight: bold;
-    margin-left: 10px;
-`;
-
 const BadgeWrapper = styled(Badge)`
     & .MuiBadge-badge {
         right: 35px;
@@ -122,7 +114,7 @@ const MenuWrapper = styled(Menu)`
         max-height: 400px;
         left: auto !important;
         position: fixed;
-        padding: 0px 10px 10px;
+        padding: 0px 15px 10px 10px;
         box-sizing: border-box;
     }
 `;
@@ -248,17 +240,6 @@ const Layout = ({ children }) => {
                 <Spinner />
             ) : (
                 <Body>
-                    <Shop>
-                        <Text
-                            fontFamily="Noto Sans KR, sans-serif"
-                            fontSize="30"
-                            fontWeight="bold"
-                            letterSpacing="-0.5px"
-                        >
-                            {artist.name}
-                        </Text>
-                        <ChipWrapper size="small" label={shop.name} />
-                    </Shop>
                     {children}
 
                     <DrawerWrapper
