@@ -279,7 +279,9 @@ const Cart = () => {
                                 ).toLocaleString()}
                             </Text>
                         </Details>
-                        <ButtonWrapper>Proceed to Checkout</ButtonWrapper>
+                        <ButtonWrapper disabled={checked.length === 0}>
+                            Proceed to Checkout
+                        </ButtonWrapper>
                     </CheckoutPanel>
                 </Body>
             )}
