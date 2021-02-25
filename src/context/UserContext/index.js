@@ -172,15 +172,19 @@ const UserProvider = ({ children }) => {
                             .doc(data.productId)
                             .get()
                             .then((product) => {
-                                console.log(product, { ...product.data() });
                                 cart.push({
                                     product: { ...product.data() },
                                     ...data,
                                     id: doc.id,
                                 });
+                                if (cart.length === querySnapshot.size) {
+                                    dispatch({
+                                        type: "SET_CART",
+                                        payload: cart,
+                                    });
+                                }
                             });
                     });
-                    dispatch({ type: "SET_CART", payload: cart });
                 }
             });
     };

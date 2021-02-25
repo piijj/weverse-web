@@ -4,7 +4,6 @@ export default (state, action) => {
             return {
                 ...state,
                 user: action.payload,
-                loading: false,
             };
         case "LOGOUT":
             return {
@@ -20,6 +19,7 @@ export default (state, action) => {
             return {
                 ...state,
                 cart: action.payload,
+                loading: false,
             };
         default:
             return state;
