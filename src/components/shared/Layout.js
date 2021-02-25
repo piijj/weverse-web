@@ -114,7 +114,7 @@ const MenuWrapper = styled(Menu)`
         max-height: 400px;
         left: auto !important;
         position: fixed;
-        padding: 0px 15px 10px 10px;
+        padding: 0px 15px 15px 10px;
         box-sizing: border-box;
     }
 `;
@@ -223,7 +223,11 @@ const Layout = ({ children }) => {
                                     </Text>
                                 </div>
                             </FlexWrapper>
-                            <Text fontSize="12" fontWeight="bold" color="red">
+                            <Text
+                                fontSize="12"
+                                fontWeight="bold"
+                                color="rgb(11, 230, 193)"
+                            >
                                 {" "}
                                 ₩
                                 {(
@@ -232,7 +236,9 @@ const Layout = ({ children }) => {
                             </Text>
                         </FlexWrapper>
                     ))}
-                    <ButtonWrapper>Checkout</ButtonWrapper>
+                    <ButtonWrapper onClick={() => history.push("/cart")}>
+                        Checkout
+                    </ButtonWrapper>
                 </MenuWrapper>
             </AppBar>
 
