@@ -226,7 +226,7 @@ const Layout = ({ children }) => {
                             <Text
                                 fontSize="12"
                                 fontWeight="bold"
-                                color="rgb(11, 230, 193)"
+                                color="rgb(11 191 161)"
                             >
                                 {" "}
                                 ₩
