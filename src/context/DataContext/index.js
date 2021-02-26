@@ -127,6 +127,7 @@ const DataProvider = ({ children }) => {
         if (state.shop && state.artist) {
             fetchProducts();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.shop, state.artist]);
 
     useEffect(() => {

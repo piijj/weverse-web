@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Checkbox, FormControlLabel } from "@material-ui/core";
-import { CheckCircle } from "@material-ui/icons";
 import styled from "styled-components";
 import Layout from "../components/shared/Layout";
 import LoadingSpinner from "../components/shared/Spinner";
 import { useUserState } from "../context/UserContext";
-import { getCartProductCount } from "../utils";
+import { getCartProductCount, groupCartOrdersByShippingDate } from "../utils";
 import Checkout from "../components/Cart/Checkout";
-import Item from "../components/Cart/Item";
+import GroupByShipping from "../components/Cart/GroupByShipping";
 
 const Text = styled.div`
     font-size: ${(props) => props.fontSize || 14}px;
@@ -36,30 +34,15 @@ const Items = styled.div`
     }
 `;
 
-const CheckCircleIcon = styled(CheckCircle)`
-    color: rgb(11, 230, 193);
-`;
-
-const UncheckedCircleIcon = styled(CheckCircle)`
-    color: rgb(235, 235, 235);
-`;
-
 const Cart = () => {
     const { cart, loading: userLoading } = useUserState();
     const allIds = cart.map((c) => c.id);
     const [checked, setChecked] = useState([]);
-
-    const updateChecked = (id) => {
-        const isChecked = checked.findIndex((i) => i === id);
-        if (isChecked >= 0) {
-            setChecked(checked.filter((item) => item !== id));
-        } else {
-            setChecked([...checked, id]);
-        }
-    };
+    const [groups, setGroups] = useState([]);
 
     useEffect(() => {
         setChecked(allIds);
+        setGroups(groupCartOrdersByShippingDate(cart));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cart]);
 
@@ -77,33 +60,12 @@ const Cart = () => {
             ) : (
                 <Body>
                     <Items>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    icon={<UncheckedCircleIcon />}
-                                    checkedIcon={<CheckCircleIcon />}
-                                    checked={checked.length === allIds.length}
-                                    onChange={() =>
-                                        setChecked(
-                                            checked.length === allIds.length
-                                                ? []
-                                                : allIds
-                                        )
-                                    }
-                                />
-                            }
-                            label={
-                                <Text fontSize={18} color="rgb(173, 177, 184)">
-                                    Select All
-                                </Text>
-                            }
-                        />
-                        {cart.map((product) => (
-                            <Item
-                                product={product}
+                        {Object.keys(groups).map((i) => (
+                            <GroupByShipping
+                                products={groups[i]}
                                 checked={checked}
-                                updateChecked={updateChecked}
-                                key={product.id}
+                                setChecked={setChecked}
+                                shippingDate={i}
                             />
                         ))}
                     </Items>

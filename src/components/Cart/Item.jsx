@@ -1,12 +1,6 @@
 import React, { useState } from "react";
 import { Grid, Checkbox } from "@material-ui/core";
-import {
-    AddCircle,
-    RemoveCircle,
-    CheckCircle,
-    Delete,
-    Update,
-} from "@material-ui/icons";
+import { AddCircle, RemoveCircle, CheckCircle } from "@material-ui/icons";
 import styled from "styled-components";
 import { useUserDispatch } from "../../context/UserContext";
 
@@ -126,7 +120,11 @@ const Item = ({ product, checked, updateChecked }) => {
                         <ItemButton
                             onClick={() => handleRemoveFromCart(product.id)}
                         >
-                            <Delete color="error" />
+                            <img
+                                src="/images/delete.svg"
+                                width={15}
+                                alt="Delete"
+                            />
                             &nbsp;<Text>Delete</Text>
                         </ItemButton>
                         {product.qty !== qty && (
@@ -135,7 +133,11 @@ const Item = ({ product, checked, updateChecked }) => {
                                     handleUpdateCart({ id: product.id, qty })
                                 }
                             >
-                                <Update color="primary" />
+                                <img
+                                    src="/images/update.svg"
+                                    width={15}
+                                    alt="Update"
+                                />
                                 &nbsp;<Text>Update</Text>
                             </ItemButton>
                         )}
