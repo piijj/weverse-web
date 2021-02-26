@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-    Button,
-    Divider,
-    OutlinedInput,
-    Modal,
-    Paper,
-} from "@material-ui/core";
+import { Button, Divider, Modal, Paper } from "@material-ui/core";
+import { AddCircle, RemoveCircle } from "@material-ui/icons";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import moment from "moment";
@@ -81,10 +76,15 @@ const Details = styled.div`
 `;
 
 const ButtonWrapper = styled(Button)`
-    border-radius: 15px;
+    border-radius: 5px;
     width: fit-content;
     padding: 0px 30px;
     margin: ${(props) => props.margin};
+    background: ${(props) => props.bg};
+    color: ${(props) =>
+        props.bg === "transparent"
+            ? "rgb(11, 230, 193)"
+            : "rgb(255, 255, 255)"};
 `;
 
 const ButtonGroup = styled.div`
@@ -101,9 +101,11 @@ const Badges = styled.div`
     margin: 10px 0px 10px 30px;
 `;
 
-const QtyWrapper = styled(OutlinedInput)`
+const QtyWrapper = styled.div`
     margin: 10px 30px;
-    width: 100px;
+    display: flex;
+    align-items: center;
+    ${"" /* width: 100px; */}
 `;
 
 const PaperWrapper = styled(Paper)`
@@ -263,18 +265,32 @@ const ViewProduct = () => {
                                     Weverse Shop Cash ₩
                                     {getPoints(product.price)}
                                 </Text>
-                                <QtyWrapper
-                                    type="number"
-                                    value={qty}
-                                    onChange={(e) => setQty(e.target.value)}
-                                    inputProps={{
-                                        max: product.maxQtyPerOrder,
-                                        min: 1,
-                                    }}
-                                />
+                                <QtyWrapper>
+                                    <AddCircle
+                                        color={
+                                            product.maxQtyPerOrder > qty
+                                                ? "primary"
+                                                : "disabled"
+                                        }
+                                        onClick={() =>
+                                            product.maxQtyPerOrder > qty &&
+                                            setQty(qty + 1)
+                                        }
+                                    />
+                                    <Text fontSize={16} margin="0px 10px">
+                                        {qty}
+                                    </Text>
+                                    <RemoveCircle
+                                        color={qty > 1 ? "primary" : "disabled"}
+                                        onClick={() =>
+                                            qty > 1 && setQty(qty - 1)
+                                        }
+                                    />
+                                </QtyWrapper>
                                 <ButtonGroup>
                                     <ButtonWrapper
                                         margin="10px 10px 10px 30px"
+                                        bg="transparent"
                                         disabled={loading}
                                         onClick={addToCart}
                                     >

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import {
-    OutlinedInput,
     Grid,
     Button,
     Divider,
     Checkbox,
     FormControlLabel,
 } from "@material-ui/core";
-import { CheckCircle } from "@material-ui/icons";
+import { AddCircle, RemoveCircle, CheckCircle } from "@material-ui/icons";
 import styled from "styled-components";
 import Layout from "../components/shared/Layout";
 import LoadingSpinner from "../components/shared/Spinner";
@@ -19,7 +18,7 @@ const Text = styled.div`
     color: ${(props) => props.color};
     font-family: ${(props) => props.fontFamily};
     font-weight: ${(props) => props.fontWeight};
-    line-height: ${(props) => props.lineHeight || 1.4};
+    line-height: ${(props) => props.lineHeight};
     margin: ${(props) => props.margin};
     letter-spacing: ${(props) => props.letterSpacing};
 `;
@@ -31,8 +30,10 @@ const FlexWrapper = styled.div`
     height: 100%;
 `;
 
-const QtyWrapper = styled(OutlinedInput)`
+const QtyWrapper = styled.div`
     margin: 10px 30px;
+    display: flex;
+    align-items: center;
     width: 80px;
 `;
 
@@ -85,6 +86,7 @@ const UncheckedCircleIcon = styled(CheckCircle)`
 `;
 
 const Item = ({ product, checked, updateChecked }) => {
+    const [qty, setQty] = useState(product.qty);
     return (
         <FlexWrapper margin="0px 0px 5px">
             <Grid container>
@@ -114,15 +116,26 @@ const Item = ({ product, checked, updateChecked }) => {
                 </Grid>
                 <Grid item xs={3}>
                     <FlexWrapper>
-                        <QtyWrapper
-                            type="number"
-                            value={product.qty}
-                            // onChange={(e) => setQty(e.target.value)}
-                            inputProps={{
-                                max: product.maxQtyPerOrder,
-                                min: 1,
-                            }}
-                        />
+                        <QtyWrapper>
+                            <AddCircle
+                                color={
+                                    product.maxQtyPerOrder > qty
+                                        ? "primary"
+                                        : "disabled"
+                                }
+                                onClick={() =>
+                                    product.maxQtyPerOrder > qty &&
+                                    setQty(qty + 1)
+                                }
+                            />
+                            <Text fontSize={16} margin="0px 10px">
+                                {qty}
+                            </Text>
+                            <RemoveCircle
+                                color={qty > 1 ? "primary" : "disabled"}
+                                onClick={() => qty > 1 && setQty(qty - 1)}
+                            />
+                        </QtyWrapper>
                     </FlexWrapper>
                 </Grid>
                 <Grid item xs={3}>
