@@ -56,8 +56,7 @@ const DataProvider = ({ children }) => {
             .firestore()
             .collection("products")
             .where("artistIds", "array-contains", state.artist.id)
-            .get()
-            .then((querySnapshot) => {
+            .onSnapshot((querySnapshot) => {
                 if (!querySnapshot.empty) {
                     const products = [];
                     querySnapshot.docs.forEach((doc) => {
@@ -128,7 +127,6 @@ const DataProvider = ({ children }) => {
         if (state.shop && state.artist) {
             fetchProducts();
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [state.shop, state.artist]);
 
     useEffect(() => {
