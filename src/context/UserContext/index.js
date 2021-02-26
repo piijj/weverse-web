@@ -224,6 +224,26 @@ const UserProvider = ({ children }) => {
         }
     };
 
+    const handleRemoveFromCart = async (id) => {
+        await firebase
+            .firestore()
+            .collection("cartItems")
+            .doc(id)
+            .delete()
+            .then(() => console.log("success"))
+            .catch((error) => showMessage(error.message, "error"));
+    };
+
+    const handleUpdateCart = async (product) => {
+        await firebase
+            .firestore()
+            .collection("cartItems")
+            .doc(product.id)
+            .update({ qty: product.qty })
+            .then(() => console.log("success"))
+            .catch((error) => showMessage(error.message, "error"));
+    };
+
     return (
         <UserStateContext.Provider value={state}>
             <UserDispatchContext.Provider
@@ -234,6 +254,8 @@ const UserProvider = ({ children }) => {
                     userRegister,
                     resendEmailVerification,
                     handleAddToCart,
+                    handleRemoveFromCart,
+                    handleUpdateCart,
                 }}
             >
                 {children}
