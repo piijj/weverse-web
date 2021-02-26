@@ -39,22 +39,6 @@ const Checkout = ({ checked, cart }) => (
     <CheckoutPanel>
         <Text
             fontFamily="Noto Sans KR, sans-serif"
-            fontSize="14"
-            color="rgb(173, 177, 184)"
-        >
-            Location
-        </Text>
-        <Text
-            fontFamily="Noto Sans KR, sans-serif"
-            fontSize="16"
-            color="rgb(173, 177, 184)"
-            margin="20px 10px"
-        >
-            Seoul, South Korea
-        </Text>
-        <Divider />
-        <Text
-            fontFamily="Noto Sans KR, sans-serif"
             fontSize="20"
             fontWeight="bold"
             margin="10px 0px 0px 0px"
