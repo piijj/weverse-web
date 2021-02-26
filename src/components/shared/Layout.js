@@ -8,7 +8,6 @@ import {
     Toolbar,
     FormControlLabel,
     RadioGroup,
-    Chip,
     Badge,
     Menu,
     Button,
@@ -146,7 +145,16 @@ const Layout = ({ children }) => {
     const { handleSelectArtist, handleSelectShop } = useDataDispatch();
     const [isOpen, setIsOpen] = useState(false);
     const [showCart, setShowCart] = useState(false);
+    const [anchorEl, setAnchorEl] = React.useState(null);
     const history = useHistory();
+
+    const handleViewCart = (e) => {
+        if (cart.length > 0) {
+            setShowCart(true);
+            setAnchorEl(e.currentTarget);
+        }
+    };
+
     return (
         <>
             <AppBar position="static" color="secondary">
@@ -157,11 +165,12 @@ const Layout = ({ children }) => {
                             color="inherit"
                             onClick={() => setIsOpen(!isOpen)}
                         >
-                            <img src="/images/menu.svg" />
+                            <img src="/images/menu.svg" alt="Menu" />
                         </IconButton>
                         <Icon
                             margin="0px 0px 0px 16px"
                             src="/images/weverse-shop.png"
+                            alt="Weverse Shop"
                             onClick={() => history.push("/")}
                         />
                     </Group>
@@ -169,6 +178,7 @@ const Layout = ({ children }) => {
                         <Icon
                             src="/images/account.svg"
                             margin="0px 5px 0px 0px"
+                            alt="Account"
                         />
                         <BadgeWrapper
                             color="primary"
@@ -178,32 +188,35 @@ const Layout = ({ children }) => {
                                 src="/images/cart.svg"
                                 width={45}
                                 margin="10px 25px 0px 25px"
-                                onClick={() =>
-                                    cart.length > 0 && setShowCart(true)
-                                }
+                                onClick={handleViewCart}
+                                alt="Cart"
                             />
                         </BadgeWrapper>
                         <Icon
                             margin="0px 25px 0px 0px"
                             src="/images/notifications.svg"
+                            alt="Notifications"
                         />
                         <Icon
                             src="/images/settings.svg"
                             onClick={() => history.push("/add")}
+                            alt="Settings"
                         />
                     </Group>
                 </ToolbarWrapper>
                 <MenuWrapper
                     keepMounted
                     open={showCart}
+                    anchorEl={anchorEl}
                     onClose={(e) => setShowCart(false)}
                 >
                     {cart.map((product) => (
-                        <FlexWrapper margin="0px 0px 5px">
+                        <FlexWrapper margin="0px 0px 5px" key={product.id}>
                             <FlexWrapper>
                                 <img
                                     src={product.product.displayPic}
                                     width={50}
+                                    alt="Item"
                                 />
                                 <div>
                                     <Text
@@ -268,7 +281,7 @@ const Layout = ({ children }) => {
                                         key={index}
                                         onClick={() => handleSelectArtist(data)}
                                     >
-                                        <Logo src={data.logo} />
+                                        <Logo src={data.logo} alt={data.name} />
                                         <Text
                                             fontFamily="Noto Sans KR, sans-serif"
                                             letterSpacing="-0.5px"
@@ -304,6 +317,7 @@ const Layout = ({ children }) => {
                                                                     shops[shop]
                                                                         .logo
                                                                 }
+                                                                alt="Shop"
                                                             />
                                                             <Text
                                                                 fontSize="12"

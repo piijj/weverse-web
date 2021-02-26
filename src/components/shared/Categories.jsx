@@ -31,7 +31,7 @@ const Categories = ({ onChange, orientation, value }) => {
     return (
         <List
             orientation={orientation}
-            value={value}
+            value={value || "ALBUM"}
             indicatorColor="primary"
             textColor="primary"
             onChange={onChange}

@@ -67,7 +67,6 @@ const AddProduct = () => {
                     shopsAvailableIn: Yup.array().required("Required"),
                     displayPic: Yup.string().required("Required"),
                     description: Yup.string().required("Required"),
-                    name: Yup.string().required("Required"),
                     category: Yup.string().required("Required"),
                     maxQtyPerOrder: Yup.number().required("Required"),
                     stock: Yup.number().required("Required"),

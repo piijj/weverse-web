@@ -96,7 +96,11 @@ const Item = ({ product, checked, updateChecked }) => {
                             checked={checked.includes(product.id)}
                             onChange={() => updateChecked(product.id)}
                         />
-                        <img src={product.product.displayPic} width={75} />
+                        <img
+                            src={product.product.displayPic}
+                            width={75}
+                            alt={product.product.name}
+                        />
                         <div>
                             <Text
                                 fontSize="16"
@@ -157,6 +161,7 @@ const Cart = () => {
 
     useEffect(() => {
         setChecked(allIds);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cart]);
 
     return (
@@ -199,6 +204,7 @@ const Cart = () => {
                                 product={product}
                                 checked={checked}
                                 updateChecked={updateChecked}
+                                key={product.id}
                             />
                         ))}
                     </Items>

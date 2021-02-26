@@ -157,6 +157,7 @@ const ViewProduct = () => {
 
     useEffect(() => {
         fetchProduct(id);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -207,6 +208,7 @@ const ViewProduct = () => {
                                             <img
                                                 src="/images/weverse-membership.svg"
                                                 width={25}
+                                                alt="Weverse Membership"
                                             />
                                             &nbsp;
                                             <Text
@@ -231,6 +233,7 @@ const ViewProduct = () => {
                                             <img
                                                 src="/images/exclusive.svg"
                                                 width={15}
+                                                alt="Weverse Exclusive"
                                             />
                                             <Text
                                                 fontSize={16}
@@ -291,6 +294,7 @@ const ViewProduct = () => {
                                             <img
                                                 src="/images/timer.svg"
                                                 width={10}
+                                                alt="Preorder"
                                             />{" "}
                                             For pre-order
                                         </Text>
@@ -392,7 +396,7 @@ const ViewProduct = () => {
                         </Text>
                         <Description>
                             {product.description.map((desc) => (
-                                <Image src={desc} />
+                                <Image src={desc} key={desc} />
                             ))}
                         </Description>
                     </Product>

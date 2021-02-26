@@ -2,7 +2,6 @@ import React, { useEffect, useContext, createContext, useReducer } from "react";
 import { useHistory } from "react-router-dom";
 import reducer from "./reducer";
 import firebase, { facebook, twitter, google } from "../../api/firebase";
-import { array } from "yup";
 
 const initialState = {
     user: {},
@@ -154,6 +153,7 @@ const UserProvider = ({ children }) => {
                 history.push("/login");
             }
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const getUserCart = (user) => {

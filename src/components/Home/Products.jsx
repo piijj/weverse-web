@@ -85,7 +85,10 @@ const Products = () => {
                                     <Badges>
                                         {product.isMembersOnly && (
                                             <Members>
-                                                <img src="/images/weverse-membership.svg" />
+                                                <img
+                                                    src="/images/weverse-membership.svg"
+                                                    alt="Artist Membership"
+                                                />
                                                 <Text
                                                     fontSize={10}
                                                     color="#9557F7"
