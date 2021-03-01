@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, CardActionArea, CardContent, Grid } from "@material-ui/core";
 import styled from "styled-components";
+import { useHistory } from "react-router-dom";
 import { useDataState } from "../../context/DataContext";
 
 const Text = styled.div`
@@ -26,13 +27,18 @@ const List = styled(Grid)`
 
 const Home = () => {
     const { products } = useDataState();
+    const history = useHistory();
     return (
         <List container justify="flex-start" spacing={3}>
             {products
                 .filter((product) => product.isFeatured)
                 .map((product) => (
                     <Grid key={product.id} item>
-                        <Card>
+                        <Card
+                            onClick={() =>
+                                history.push(`/product/${product.id}`)
+                            }
+                        >
                             <CardActionArea>
                                 <Image src={product.header.pic} />
                                 <CardContent>
