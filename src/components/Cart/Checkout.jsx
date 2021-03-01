@@ -10,6 +10,7 @@ import { getSelectedItemsCount, getSubtotal } from "../../utils";
 import { useUserState } from "../../context/UserContext";
 import ShippingAddressForm from "./ShippingAddressForm";
 import AddressList from "./AddressList";
+import ShopperDetailsForm from "./ShopperDetailsForm";
 
 const Text = styled.div`
     font-size: ${(props) => props.fontSize || 14}px;
@@ -63,7 +64,7 @@ const AccordionDetailsWrapper = styled(AccordionDetails)`
 `;
 
 const Checkout = ({ checked, cart }) => {
-    const { address, addresses } = useUserState();
+    const { address, addresses, shopperDetails } = useUserState();
     const [active, setActive] = useState(0);
     const count = getSelectedItemsCount(cart, checked);
 
@@ -136,21 +137,36 @@ const Checkout = ({ checked, cart }) => {
                 onChange={() => setActive(active === 2 ? 0 : 2)}
             >
                 <AccordionSummaryWrapper
-                    expandIcon={<ButtonWrapper>Add</ButtonWrapper>}
+                    expandIcon={
+                        <ButtonWrapper>
+                            {shopperDetails ? "Change" : "Add"}
+                        </ButtonWrapper>
+                    }
                 >
                     <Text fontSize={16} fontWeight={400}>
                         Customer
                     </Text>
-                    <Text color="rgb(173, 177, 184)">
-                        Add shopper information
-                    </Text>
+                    {shopperDetails ? (
+                        <div>
+                            <Text color="rgb(173, 177, 184)">
+                                {shopperDetails.firstName}{" "}
+                                {shopperDetails.lastName}
+                            </Text>
+                            <Text color="rgb(173, 177, 184)">
+                                {shopperDetails.email}
+                            </Text>
+                            <Text color="rgb(173, 177, 184)">
+                                {shopperDetails.mobileNumber}
+                            </Text>
+                        </div>
+                    ) : (
+                        <Text color="rgb(173, 177, 184)">
+                            Add shopper information
+                        </Text>
+                    )}
                 </AccordionSummaryWrapper>
                 <AccordionDetailsWrapper>
-                    <Text>
-                        Donec placerat, lectus sed mattis semper, neque lectus
-                        feugiat lectus, varius pulvinar diam eros in elit.
-                        Pellentesque convallis laoreet laoreet.
-                    </Text>
+                    <ShopperDetailsForm setActive={setActive} />
                 </AccordionDetailsWrapper>
             </Accordion>
         </CheckoutPanel>

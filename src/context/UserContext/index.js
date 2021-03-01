@@ -10,6 +10,7 @@ const initialState = {
     cart: [],
     addresses: [],
     address: undefined,
+    shopperDetails: undefined,
 };
 
 const UserStateContext = createContext(initialState);

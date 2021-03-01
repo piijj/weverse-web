@@ -31,6 +31,11 @@ const reducer = (state, action) => {
                 ...state,
                 address: action.payload,
             };
+        case "SET_SHOPPER_DETAILS":
+            return {
+                ...state,
+                shopperDetails: action.payload,
+            };
         default:
             return state;
     }
