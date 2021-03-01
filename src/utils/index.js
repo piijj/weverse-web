@@ -37,3 +37,10 @@ export const groupCartOrdersByShippingDate = (cart) => {
 
     return groups;
 };
+
+export const getSelectedItemsCount = (cart, selected) =>
+    cart.reduce(
+        (a, b) =>
+            selected.includes(b.id) ? Number(a) + Number(b.qty) : Number(a),
+        0
+    );

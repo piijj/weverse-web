@@ -38,16 +38,10 @@ const theme = createMuiTheme({
                 "&:hover $notchedOutline": {
                     borderColor: "rgb(235, 235, 235)",
                 },
-                "&$focused $notchedOutline": {
-                    borderColor: "rgb(11, 230, 193)",
-                },
             },
             input: {
                 boxSizing: "border-box",
                 height: "100%",
-            },
-            notchedOutline: {
-                borderColor: "rgb(235, 235, 235)",
             },
         },
         MuiButton: {

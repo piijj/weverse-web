@@ -21,6 +21,16 @@ const reducer = (state, action) => {
                 cart: action.payload,
                 loading: false,
             };
+        case "SET_ADDRESSES":
+            return {
+                ...state,
+                addresses: action.payload,
+            };
+        case "SET_ADDRESS":
+            return {
+                ...state,
+                address: action.payload,
+            };
         default:
             return state;
     }

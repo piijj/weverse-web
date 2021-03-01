@@ -8,6 +8,8 @@ const initialState = {
     loading: true,
     msg: undefined,
     cart: [],
+    addresses: [],
+    address: undefined,
 };
 
 const UserStateContext = createContext(initialState);
@@ -16,6 +18,35 @@ const UserDispatchContext = createContext(undefined);
 const UserProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     const history = useHistory();
+
+    const showMessage = (err, type) => {
+        dispatch({ type: "SHOW_MSG", payload: { msg: err, type } });
+        setTimeout(() => dispatch({ type: "SHOW_MSG", payload: null }), 3000);
+    };
+
+    const addUserToCollection = async (uid, payload) => {
+        await firebase
+            .firestore()
+            .collection("users")
+            .doc(uid)
+            .set(payload)
+            .then(() => console.log("success"))
+            .catch((error) => showMessage(error.message, "error"));
+    };
+
+    useEffect(() => {
+        firebase.auth().onAuthStateChanged(async (user) => {
+            if (user) {
+                await getUser(user);
+                await getUserCart(user);
+                await getUserAddresses(user);
+            } else {
+                dispatch({ type: "SET_USER", payload: undefined });
+                history.push("/login");
+            }
+        });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const userRegister = async (values) => {
         await firebase
@@ -37,13 +68,15 @@ const UserProvider = ({ children }) => {
             });
     };
 
-    const addUserToCollection = async (uid, payload) => {
+    //to refactor
+    const resendEmailVerification = async () => {
         await firebase
-            .firestore()
-            .collection("users")
-            .doc(uid)
-            .set(payload)
-            .then(() => console.log("success"))
+            .auth()
+            .currentUser.sendEmailVerification()
+            .then(() => {
+                showMessage("Verification email sent.", "success");
+                userLogout();
+            })
             .catch((error) => showMessage(error.message, "error"));
     };
 
@@ -104,6 +137,10 @@ const UserProvider = ({ children }) => {
             .catch((error) => showMessage(error.message, "error"));
     };
 
+    const userLogout = async () => {
+        firebase.auth().signOut();
+    };
+
     const getUser = (user) => {
         firebase
             .firestore()
@@ -122,39 +159,6 @@ const UserProvider = ({ children }) => {
                 }
             });
     };
-
-    const userLogout = async () => {
-        firebase.auth().signOut();
-    };
-
-    const showMessage = (err, type) => {
-        dispatch({ type: "SHOW_MSG", payload: { msg: err, type } });
-        setTimeout(() => dispatch({ type: "SHOW_MSG", payload: null }), 3000);
-    };
-    //to refactor
-    const resendEmailVerification = async () => {
-        await firebase
-            .auth()
-            .currentUser.sendEmailVerification()
-            .then(() => {
-                showMessage("Verification email sent.", "success");
-                userLogout();
-            })
-            .catch((error) => showMessage(error.message, "error"));
-    };
-
-    useEffect(() => {
-        firebase.auth().onAuthStateChanged(async (user) => {
-            if (user) {
-                await getUser(user);
-                await getUserCart(user);
-            } else {
-                dispatch({ type: "SET_USER", payload: undefined });
-                history.push("/login");
-            }
-        });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
 
     const getUserCart = (user) => {
         firebase
@@ -185,6 +189,22 @@ const UserProvider = ({ children }) => {
                                 }
                             });
                     });
+                }
+            });
+    };
+
+    const getUserAddresses = (user) => {
+        firebase
+            .firestore()
+            .collection("addresses")
+            .where("userId", "==", user.uid)
+            .onSnapshot((querySnapshot) => {
+                if (!querySnapshot.empty) {
+                    const addresses = [];
+                    querySnapshot.docs.forEach((doc) => {
+                        addresses.push({ ...doc.data(), id: doc.id });
+                    });
+                    dispatch({ type: "SET_ADDRESSES", payload: addresses });
                 }
             });
     };
@@ -244,6 +264,23 @@ const UserProvider = ({ children }) => {
             .catch((error) => showMessage(error.message, "error"));
     };
 
+    const handleAddAddress = async (values, setActive) => {
+        const payload = { ...values, userId: state.user.id };
+        await firebase
+            .firestore()
+            .collection("addresses")
+            .add(payload)
+            .then((doc) => {
+                dispatch({
+                    type: "SET_ADDRESS",
+                    payload: { ...payload, id: doc.id },
+                });
+                showMessage("Address added!", "success");
+                setActive(0);
+            })
+            .catch((error) => showMessage(error.message, "error"));
+    };
+
     return (
         <UserStateContext.Provider value={state}>
             <UserDispatchContext.Provider
@@ -256,6 +293,7 @@ const UserProvider = ({ children }) => {
                     handleAddToCart,
                     handleRemoveFromCart,
                     handleUpdateCart,
+                    handleAddAddress,
                 }}
             >
                 {children}

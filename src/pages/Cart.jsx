@@ -66,6 +66,7 @@ const Cart = () => {
                                 checked={checked}
                                 setChecked={setChecked}
                                 shippingDate={i}
+                                key={groups[i]}
                             />
                         ))}
                     </Items>

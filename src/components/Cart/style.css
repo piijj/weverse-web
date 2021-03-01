@@ -1,0 +1,20 @@
+.special-label {
+    color: #878e96;
+    font-size: 1rem;
+}
+
+.form-control {
+    height: 47px !important;
+    font-family: "Noto Sans KR" !important;
+    font-size: 15px !important;
+    font-weight: 500 !important;
+}
+.form-control:focus {
+    border-color: #0be6c1 !important;
+    box-shadow: 0 0 0 1px#0BE6C1 !important;
+}
+
+.form-control:hover {
+    border-color: rgb(235, 235, 235) !important;
+    /* box-shadow: 0 0 0 1px rgb(235, 235, 235) !important; */
+}
