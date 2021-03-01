@@ -7,8 +7,9 @@ import {
 } from "@material-ui/core";
 import styled from "styled-components";
 import { getSelectedItemsCount, getSubtotal } from "../../utils";
-import ShippingAddressForm from "./ShippingAddressForm";
 import { useUserState } from "../../context/UserContext";
+import ShippingAddressForm from "./ShippingAddressForm";
+import AddressList from "./AddressList";
 
 const Text = styled.div`
     font-size: ${(props) => props.fontSize || 14}px;
@@ -62,9 +63,10 @@ const AccordionDetailsWrapper = styled(AccordionDetails)`
 `;
 
 const Checkout = ({ checked, cart }) => {
-    const { address } = useUserState();
+    const { address, addresses } = useUserState();
     const [active, setActive] = useState(0);
     const count = getSelectedItemsCount(cart, checked);
+
     return (
         <CheckoutPanel>
             <Details>
@@ -84,7 +86,15 @@ const Checkout = ({ checked, cart }) => {
                 onChange={() => setActive(active === 1 ? 0 : 1)}
             >
                 <AccordionSummaryWrapper
-                    expandIcon={<ButtonWrapper>Add</ButtonWrapper>}
+                    expandIcon={
+                        <ButtonWrapper>
+                            {address
+                                ? "Change"
+                                : addresses.length > 0
+                                ? "Select"
+                                : "Add"}
+                        </ButtonWrapper>
+                    }
                 >
                     <Text fontSize={16} fontWeight={400}>
                         Shipping Address
@@ -95,6 +105,7 @@ const Checkout = ({ checked, cart }) => {
                                 {address.firstName} {address.lastName}
                             </Text>
                             <Text color="rgb(173, 177, 184)">
+                                {address.address}, {address.city},{" "}
                                 {address.state}, {address.country.text}
                             </Text>
                             <Text color="rgb(173, 177, 184)">
@@ -103,12 +114,21 @@ const Checkout = ({ checked, cart }) => {
                         </div>
                     ) : (
                         <Text color="rgb(173, 177, 184)">
-                            Add shipping addresss
+                            {address
+                                ? "Change"
+                                : addresses.length > 0
+                                ? "Select"
+                                : "Add"}{" "}
+                            shipping addresss
                         </Text>
                     )}
                 </AccordionSummaryWrapper>
                 <AccordionDetailsWrapper>
-                    <ShippingAddressForm setActive={setActive} />
+                    {addresses.length > 0 ? (
+                        <AddressList setActive={setActive} />
+                    ) : (
+                        <ShippingAddressForm setActive={setActive} />
+                    )}
                 </AccordionDetailsWrapper>
             </Accordion>
             <Accordion
