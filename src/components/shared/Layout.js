@@ -67,7 +67,9 @@ const Logo = styled.img`
     height: 30px;
     border: 1px solid rgba(32, 36, 41, 0.1);
     border-radius: 30px;
-    background-color: rgb(255, 255, 255);
+    ${({ theme }) => `
+            background-color: ${theme.palette.secondary.main};
+            `}
     overflow: hidden;
     flex-shrink: 0;
 `;

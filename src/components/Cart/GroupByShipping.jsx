@@ -16,7 +16,9 @@ const Text = styled.div`
 `;
 
 const CheckCircleIcon = styled(CheckCircle)`
-    color: rgb(11, 230, 193);
+    ${({ theme }) => `
+            color: ${theme.palette.primary.main};
+    `}
 `;
 
 const UncheckedCircleIcon = styled(CheckCircle)`

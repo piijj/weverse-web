@@ -33,15 +33,20 @@ const Check = styled.img`
 
 const ModalButton = styled(Button)`
     width: 100%;
-    background: ${(props) => props.bg};
-    color: ${(props) =>
-        props.bg === "transparent"
-            ? "rgb(11, 230, 193)"
-            : "rgb(255, 255, 255)"};
     text-transform: inherit;
     border-radius: 5px;
     height: 40px;
-    margin: ${(props) => props.margin};
+    ${({ theme, bg, margin }) => `
+            background: ${theme.palette.primary.main};
+    background: ${bg};
+
+    color: ${
+        bg === "transparent"
+            ? theme.palette.primary.main
+            : theme.palette.secondary.main
+    };
+    margin: ${margin};
+            `}
 `;
 
 const AddedToCartModal = ({ modal, showModal }) => {

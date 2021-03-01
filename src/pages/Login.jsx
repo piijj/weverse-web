@@ -8,7 +8,9 @@ import { Error } from "@material-ui/icons";
 import * as Yup from "yup";
 
 const Wrapper = styled.div`
-    background-color: rgb(255, 255, 255);
+    ${({ theme }) => `
+            background-color: ${theme.palette.secondary.main};
+            `}
     border: 1px solid rgb(245, 247, 250);
     border-radius: 8px;
     padding: 0px 48px;

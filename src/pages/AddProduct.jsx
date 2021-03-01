@@ -29,8 +29,10 @@ const ButtonWrapper = styled(Button)`
 `;
 
 const CheckCircleIcon = styled(CheckCircle)`
-    color: rgb(11, 230, 193);
+    ${({ theme }) => `
+            color: ${theme.palette.primary.main};
     transform: scale(1.1);
+            `}
 `;
 
 const UncheckedCircleIcon = styled(CheckCircle)`

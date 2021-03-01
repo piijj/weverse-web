@@ -44,12 +44,15 @@ const ButtonWrapper = styled(Button)`
     border-radius: 5px;
     width: fit-content;
     padding: 0px 30px;
-    margin: ${(props) => props.margin};
-    background: ${(props) => props.bg};
-    color: ${(props) =>
-        props.bg === "transparent"
-            ? "rgb(11, 230, 193)"
-            : "rgb(255, 255, 255)"};
+    ${({ theme, bg, margin }) => `
+    margin: ${margin};
+    background: ${bg};
+    color: ${
+        bg === "transparent"
+            ? theme.palette.primary.main
+            : theme.palette.secondary.main
+    };
+    `}
 `;
 
 const ButtonGroup = styled.div`

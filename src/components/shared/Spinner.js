@@ -14,12 +14,12 @@ const loading = keyframes`
 `;
 
 const Spinner = styled.div`
-    background: rgb(11, 230, 193);
+    background: ${({ theme }) => theme.palette.primary.main};
     animation: 1s ease-in-out -0.16s infinite normal none running ${loading};
     width: 0.8em;
     height: 3em;
     border-radius: 0.4em;
-    color: rgb(11, 230, 193);
+    color: ${({ theme }) => theme.palette.primary.main};
     text-indent: -9999em;
     margin: 30px auto;
     position: relative;
@@ -27,7 +27,7 @@ const Spinner = styled.div`
     transform: translateZ(0px);
 
     :before {
-        background: rgb(11, 230, 193);
+        background: ${({ theme }) => theme.palette.primary.main};
         animation: 1s ease-in-out 0s infinite normal none running ${loading};
         width: 0.8em;
         height: 3em;
@@ -40,7 +40,7 @@ const Spinner = styled.div`
     }
 
     :after {
-        background: rgb(11, 230, 193);
+        background: ${({ theme }) => theme.palette.primary.main};
         animation: 1s ease-in-out 0s infinite normal none running ${loading};
         width: 0.8em;
         height: 3em;
