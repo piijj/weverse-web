@@ -66,6 +66,7 @@ const AccordionDetailsWrapper = styled(AccordionDetails)`
 const Checkout = ({ checked, cart }) => {
     const { address, addresses, shopperDetails } = useUserState();
     const [active, setActive] = useState(0);
+    const [addAddress, setAddAddress] = useState(false);
     const count = getSelectedItemsCount(cart, checked);
 
     return (
@@ -125,10 +126,13 @@ const Checkout = ({ checked, cart }) => {
                     )}
                 </AccordionSummaryWrapper>
                 <AccordionDetailsWrapper>
-                    {addresses.length > 0 ? (
-                        <AddressList setActive={setActive} />
-                    ) : (
+                    {addresses.length === 0 || addAddress ? (
                         <ShippingAddressForm setActive={setActive} />
+                    ) : (
+                        <AddressList
+                            setActive={setActive}
+                            setAddAddress={setAddAddress}
+                        />
                     )}
                 </AccordionDetailsWrapper>
             </Accordion>

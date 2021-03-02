@@ -35,7 +35,7 @@ const ButtonWrapper = styled(Button)`
     height: 30px;
 `;
 
-const ShippingAddressForm = ({ setActive }) => {
+const ShippingAddressForm = ({ setActive, setAddAddress }) => {
     const { handleAddAddress } = useUserDispatch();
     return (
         <Formik
@@ -51,7 +51,9 @@ const ShippingAddressForm = ({ setActive }) => {
                 mobileNumber: Yup.string().required("Required"),
             })}
             initialValues={{ country: { value: "ph" } }}
-            onSubmit={(values) => handleAddAddress(values, setActive)}
+            onSubmit={(values) =>
+                handleAddAddress(values, setActive, setAddAddress)
+            }
         >
             {({
                 handleSubmit,

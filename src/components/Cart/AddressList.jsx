@@ -18,8 +18,8 @@ const ButtonWrapper = styled(Button)`
     padding: 0px 10px;
     font-size: 12px;
     width: 100%;
-    height: 20px;
-    ${({ theme }) => `
+    ${({ theme, height }) => `
+        height: ${height};
         color: ${theme.palette.primary.secondary};
         border: ${`1px solid ${theme.palette.primary.main}`}
     `}
@@ -29,7 +29,7 @@ const CardWrapper = styled(Card)`
     margin-bottom: 10px;
 `;
 
-const Checkout = ({ setActive }) => {
+const Checkout = ({ setActive, setAddAddress }) => {
     const { addresses } = useUserState();
     const { dispatch } = useUserDispatch();
 
@@ -44,7 +44,7 @@ const Checkout = ({ setActive }) => {
     return (
         <>
             {addresses.map((address) => (
-                <CardWrapper>
+                <CardWrapper key={address.id}>
                     <CardContent>
                         <Text>
                             {address.firstName} {address.lastName}
@@ -58,6 +58,7 @@ const Checkout = ({ setActive }) => {
                     </CardContent>
                     <CardActions>
                         <ButtonWrapper
+                            height="20px"
                             onClick={() => handleSelectAddress(address)}
                         >
                             Select
@@ -65,6 +66,9 @@ const Checkout = ({ setActive }) => {
                     </CardActions>
                 </CardWrapper>
             ))}
+            <ButtonWrapper height="30px" onClick={() => setAddAddress(true)}>
+                Add New Address
+            </ButtonWrapper>
         </>
     );
 };

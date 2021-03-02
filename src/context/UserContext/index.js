@@ -265,7 +265,7 @@ const UserProvider = ({ children }) => {
             .catch((error) => showMessage(error.message, "error"));
     };
 
-    const handleAddAddress = async (values, setActive) => {
+    const handleAddAddress = async (values, setActive, setAddAddress) => {
         const payload = { ...values, userId: state.user.id };
         await firebase
             .firestore()
@@ -278,6 +278,7 @@ const UserProvider = ({ children }) => {
                 });
                 showMessage("Address added!", "success");
                 setActive(0);
+                setAddAddress(false);
             })
             .catch((error) => showMessage(error.message, "error"));
     };
