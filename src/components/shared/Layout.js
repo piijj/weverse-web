@@ -3,11 +3,7 @@ import {
     AppBar,
     Drawer,
     IconButton,
-    ListItem,
-    Radio,
     Toolbar,
-    FormControlLabel,
-    RadioGroup,
     Badge,
     Menu,
     Button,
@@ -18,6 +14,7 @@ import { useDataState, useDataDispatch } from "../../context/DataContext";
 import Spinner from "../shared/Spinner";
 import { useUserState } from "../../context/UserContext";
 import { getCartProductCount } from "../../utils";
+import ArtistList from "./ArtistList";
 
 const DrawerWrapper = styled(Drawer)`
     top: 75px !important;
@@ -59,35 +56,6 @@ const Text = styled.div`
     line-height: ${(props) => props.lineHeight || 1.4};
     margin: ${(props) => props.margin};
     letter-spacing: ${(props) => props.letterSpacing};
-`;
-
-const Logo = styled.img`
-    display: block;
-    width: 30px;
-    height: 30px;
-    border: 1px solid rgba(32, 36, 41, 0.1);
-    border-radius: 30px;
-    ${({ theme }) => `
-            background-color: ${theme.palette.secondary.main};
-            `}
-    overflow: hidden;
-    flex-shrink: 0;
-`;
-
-const ArtistWrapper = styled(ListItem)`
-    padding: 11px 0px;
-    cursor: pointer;
-
-    & .MuiListItem-gutters {
-        padding-left: 0px;
-        padding-right: 0px;
-    }
-`;
-
-const Shop = styled.div`
-    width: 100px;
-    display: flex;
-    align-items: center;
 `;
 
 const Body = styled.div`
@@ -136,15 +104,9 @@ const ButtonWrapper = styled(Button)`
 `;
 
 const Layout = ({ children }) => {
-    const {
-        artists,
-        shops,
-        artist,
-        shop,
-        loading: dataLoading,
-    } = useDataState();
+    const { loading: dataLoading } = useDataState();
     const { loading: userLoading, cart } = useUserState();
-    const { handleSelectArtist, handleSelectShop } = useDataDispatch();
+    const { dispatch } = useDataDispatch();
     const [isOpen, setIsOpen] = useState(false);
     const [showCart, setShowCart] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -155,6 +117,11 @@ const Layout = ({ children }) => {
             setShowCart(true);
             setAnchorEl(e.currentTarget);
         }
+    };
+
+    const handleSelectArtistAndShop = (artist, shop) => {
+        dispatch({ type: "SET_ARTIST_AND_SHOP", payload: { artist, shop } });
+        setIsOpen(false);
     };
 
     return (
@@ -201,7 +168,7 @@ const Layout = ({ children }) => {
                         />
                         <Icon
                             src="/images/settings.svg"
-                            onClick={() => history.push("/add")}
+                            onClick={() => history.push("/settings")}
                             alt="Settings"
                         />
                     </Group>
@@ -277,70 +244,11 @@ const Layout = ({ children }) => {
                             >
                                 Artists
                             </Text>
-                            {artists.map((data, index) => (
-                                <div key={data.id}>
-                                    <ArtistWrapper
-                                        key={index}
-                                        onClick={() => handleSelectArtist(data)}
-                                    >
-                                        <Logo src={data.logo} alt={data.name} />
-                                        <Text
-                                            fontFamily="Noto Sans KR, sans-serif"
-                                            letterSpacing="-0.5px"
-                                            color="rgb(52, 58, 64)"
-                                            margin="0px 0px 0px 12px"
-                                        >
-                                            {data.displayName}
-                                        </Text>
-                                    </ArtistWrapper>
-                                    {artist === data && (
-                                        <RadioGroup
-                                            name="shop"
-                                            defaultValue={shop ? shop.id : ""}
-                                            onChange={(e) => {
-                                                handleSelectShop(
-                                                    shops[e.target.value]
-                                                );
-                                                setIsOpen(false);
-                                            }}
-                                        >
-                                            {data.shopIds.map((shop) => (
-                                                <FormControlLabel
-                                                    key={shop}
-                                                    value={shop}
-                                                    control={
-                                                        <Radio color="primary" />
-                                                    }
-                                                    label={
-                                                        <Shop>
-                                                            <img
-                                                                width="20px"
-                                                                src={
-                                                                    shops[shop]
-                                                                        .logo
-                                                                }
-                                                                alt="Shop"
-                                                            />
-                                                            <Text
-                                                                fontSize="12"
-                                                                fontFamily="Noto Sans KR, sans-serif"
-                                                                letterSpacing="-0.5px"
-                                                                color="rgb(52, 58, 64)"
-                                                                margin="0px 0px 0px 12px"
-                                                            >
-                                                                {shops[
-                                                                    shop
-                                                                ].name.toUpperCase()}
-                                                            </Text>
-                                                        </Shop>
-                                                    }
-                                                    labelPlacement="start"
-                                                />
-                                            ))}
-                                        </RadioGroup>
-                                    )}
-                                </div>
-                            ))}
+                            <ArtistList
+                                handleSelectArtistAndShop={
+                                    handleSelectArtistAndShop
+                                }
+                            />
                         </>
                     </DrawerWrapper>
                 </Body>
