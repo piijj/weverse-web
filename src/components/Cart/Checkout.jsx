@@ -11,6 +11,7 @@ import { useUserState } from "../../context/UserContext";
 import ShippingAddressForm from "./ShippingAddressForm";
 import AddressList from "./AddressList";
 import ShopperDetailsForm from "./ShopperDetailsForm";
+import ShippingOption from "./ShippingOption";
 
 const Text = styled.div`
     font-size: ${(props) => props.fontSize || 14}px;
@@ -68,6 +69,12 @@ const Checkout = ({ checked, cart }) => {
     const [active, setActive] = useState(0);
     const [addAddress, setAddAddress] = useState(false);
     const count = getSelectedItemsCount(cart, checked);
+
+    const shipToSK = address && address.country.text === "South Korea";
+    const details = `For general product, it could take 7-14 business days. Please check release date for pre-order item. ${
+        shipToSK &&
+        "Additional shipping fee will be charged for Jeju Island, Ulleung Island, and other regions. (3,000 / 5,000 KRW depending on regions)"
+    }`;
 
     return (
         <CheckoutPanel>
@@ -171,6 +178,33 @@ const Checkout = ({ checked, cart }) => {
                 </AccordionSummaryWrapper>
                 <AccordionDetailsWrapper>
                     <ShopperDetailsForm setActive={setActive} />
+                </AccordionDetailsWrapper>
+            </Accordion>
+            <Accordion
+                expanded={active === 3}
+                onChange={() => setActive(active === 2 ? 0 : 3)}
+            >
+                <AccordionSummaryWrapper
+                    expandIcon={<ButtonWrapper>Change</ButtonWrapper>}
+                >
+                    <Text fontSize={16} fontWeight={400}>
+                        Shipping Option
+                    </Text>
+                    <div>
+                        <Text margin="10px 0px">
+                            {shipToSK
+                                ? "CJ 대한 통운 (₩0)"
+                                : "International Shipping Fee (₩26,787)"}
+                        </Text>
+                        <Text color="rgb(173, 177, 184)">{details}</Text>
+                    </div>
+                </AccordionSummaryWrapper>
+                <AccordionDetailsWrapper>
+                    <ShippingOption
+                        setActive={setActive}
+                        shipToSK={shipToSK}
+                        details={details}
+                    />
                 </AccordionDetailsWrapper>
             </Accordion>
         </CheckoutPanel>
