@@ -201,6 +201,7 @@ const countryList = [
     { text: "Somalia", value: "SO" },
     { text: "South Africa", value: "ZA" },
     { text: "South Georgia and the South Sandwich Islands", value: "GS" },
+    { text: "South Korea", value: "KR" },
     { text: "Spain", value: "ES" },
     { text: "Sri Lanka", value: "LK" },
     { text: "Sudan", value: "SD" },
