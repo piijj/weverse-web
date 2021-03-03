@@ -1,26 +1,46 @@
-import axios from "axios";
+import currencies from "./currencies";
+const rates = { JPY: 0.1, USD: 0.00097277 };
 
-export const convertCurrency = (base, to, amount) => {
-    axios
-        .get(
-            `https://api.exchangeratesapi.io/latest?base=${base}&symbols=${to}`
-        )
-        .then((response) => (response.rates[to] * amount).toFixed(2));
+export const convertPrice = (price, currency) => {
+    const converted = currency !== "KRW" ? price * rates[currency] : price;
+    return formatPrice(converted, currency);
 };
 
-export const getPoints = (amount) => Math.round(amount / 5000) * 50;
+const formatPrice = (price, currency) =>
+    `${currencies[currency].symbol} ${Number(
+        parseFloat(price).toFixed(2)
+    ).toLocaleString("en")}`;
+
+export const getPoints = (amount, currency) => {
+    let points;
+    switch (currency) {
+        case "USD":
+            points = Math.round((amount * rates.USD) / 5) * 0.05;
+            break;
+        case "JPY":
+            points = Math.round((amount * rates.JPY) / 5000) * 50;
+            break;
+        default:
+            points = Math.round(amount / 5000) * 50;
+            break;
+    }
+
+    return formatPrice(points, currency);
+};
 
 export const getCartProductCount = (cart) =>
     cart.reduce((a, b) => Number(a) + Number(b.qty), 0);
 
-export const getSubtotal = (cart, selected) =>
-    cart.reduce(
+export const getSubtotal = (cart, selected, currency) => {
+    const subtotal = cart.reduce(
         (a, b) =>
             selected.includes(b.id)
                 ? Number(a) + Number(b.qty * b.product.price)
                 : a,
         0
     );
+    return convertPrice(subtotal, currency);
+};
 
 export const groupCartOrdersByShippingDate = (cart) => {
     const groups = { soon: [] };

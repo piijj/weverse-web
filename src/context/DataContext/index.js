@@ -12,7 +12,7 @@ const initialState = {
     loading: true,
     product: null,
     productLoading: true,
-    currency: "krw",
+    currency: "KRW",
 };
 
 const DataStateContext = createContext(initialState);

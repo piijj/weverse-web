@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { CardActionArea, CardContent, Grid } from "@material-ui/core";
 import styled from "styled-components";
-import { useDataState } from "../../context/DataContext";
 import { useHistory } from "react-router-dom";
+import { useDataState } from "../../context/DataContext";
 import Categories from "../shared/Categories";
+import { convertPrice } from "../../utils";
+import currencies from "../../utils/currencies";
 
 const Text = styled.div`
     font-size: ${(props) => props.fontSize || 14}px;
@@ -50,7 +52,7 @@ const List = styled(Grid)`
 `;
 
 const Products = () => {
-    const { products, categories } = useDataState();
+    const { products, categories, currency } = useDataState();
     const [category, setCategory] = useState("");
     const history = useHistory();
 
@@ -128,7 +130,7 @@ const Products = () => {
                                     </Badges>
                                     <Text fontSize={14}>{product.name}</Text>
                                     <Text fontSize={14} fontWeight="bold">
-                                        ₩{product.price.toLocaleString()}
+                                        {convertPrice(product.price, currency)}
                                     </Text>
                                 </CardContent>
                             </Card>

@@ -3,6 +3,8 @@ import { Grid, Checkbox } from "@material-ui/core";
 import { AddCircle, RemoveCircle, CheckCircle } from "@material-ui/icons";
 import styled from "styled-components";
 import { useUserDispatch } from "../../context/UserContext";
+import { convertPrice } from "../../utils";
+import { useDataState } from "../../context/DataContext";
 
 const Text = styled.div`
     font-size: ${(props) => props.fontSize || 14}px;
@@ -49,6 +51,7 @@ const ItemButton = styled.div`
 `;
 
 const Item = ({ product, checked, updateChecked }) => {
+    const { currency } = useDataState();
     const { handleRemoveFromCart, handleUpdateCart } = useUserDispatch();
     const [qty, setQty] = useState(product.qty);
     return (
@@ -109,11 +112,10 @@ const Item = ({ product, checked, updateChecked }) => {
                             fontWeight="bold"
                             color="rgb(11 191 161)"
                         >
-                            {" "}
-                            ₩
-                            {(
-                                product.product.price * product.qty
-                            ).toLocaleString()}
+                            {convertPrice(
+                                product.product.price * product.qty,
+                                currency
+                            )}
                         </Text>
                     </FlexWrapper>
                 </Grid>

@@ -1,13 +1,13 @@
 const currencies = {
-    krw: {
+    KRW: {
         displayName: "South Korean Won",
         symbol: "₩",
     },
-    jpy: {
+    JPY: {
         displayName: "Japanese Yen",
         symbol: "¥",
     },
-    usd: {
+    USD: {
         displayName: "US Dollar",
         symbol: "$",
     },

@@ -5,7 +5,7 @@ import styled from "styled-components";
 import moment from "moment";
 import { useDataState } from "../../context/DataContext";
 import { useUserDispatch } from "../../context/UserContext";
-import { getPoints } from "../../utils";
+import { convertPrice, getPoints } from "../../utils";
 
 const Text = styled.div`
     font-size: ${(props) => props.fontSize || 14}px;
@@ -76,7 +76,7 @@ const QtyWrapper = styled.div`
 `;
 
 const ProductDetails = ({ showModal }) => {
-    const { product, shop } = useDataState();
+    const { product, shop, currency } = useDataState();
     const { handleAddToCart } = useUserDispatch();
     const [qty, setQty] = useState(1);
     const [loading, isLoading] = useState(false);
@@ -140,14 +140,14 @@ const ProductDetails = ({ showModal }) => {
                     fontWeight="bold"
                     margin="10px 0px 10px 30px"
                 >
-                    ₩{product.price.toLocaleString()}
+                    {convertPrice(product.price, currency)}
                 </Text>
                 <Text
                     fontSize={18}
                     color="rgb(63, 162, 244)"
                     margin="10px 0px 10px 30px"
                 >
-                    Weverse Shop Cash ₩{getPoints(product.price)}
+                    Weverse Shop Cash {getPoints(product.price, currency)}
                 </Text>
                 <QtyWrapper>
                     <AddCircle

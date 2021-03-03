@@ -13,7 +13,7 @@ import { useHistory } from "react-router-dom";
 import { useDataState, useDataDispatch } from "../../context/DataContext";
 import Spinner from "../shared/Spinner";
 import { useUserState } from "../../context/UserContext";
-import { getCartProductCount } from "../../utils";
+import { convertPrice, getCartProductCount } from "../../utils";
 import ArtistList from "./ArtistList";
 
 const DrawerWrapper = styled(Drawer)`
@@ -56,6 +56,8 @@ const Text = styled.div`
     line-height: ${(props) => props.lineHeight || 1.4};
     margin: ${(props) => props.margin};
     letter-spacing: ${(props) => props.letterSpacing};
+    width: ${(props) => props.width};
+    text-align: ${(props) => props.textAlign};
 `;
 
 const Body = styled.div`
@@ -104,7 +106,7 @@ const ButtonWrapper = styled(Button)`
 `;
 
 const Layout = ({ children }) => {
-    const { loading: dataLoading } = useDataState();
+    const { currency, loading: dataLoading } = useDataState();
     const { loading: userLoading, cart } = useUserState();
     const { dispatch } = useDataDispatch();
     const [isOpen, setIsOpen] = useState(false);
@@ -209,12 +211,13 @@ const Layout = ({ children }) => {
                                 fontSize="12"
                                 fontWeight="bold"
                                 color="rgb(11 191 161)"
+                                width="75px"
+                                textAlign="right"
                             >
-                                {" "}
-                                ₩
-                                {(
-                                    product.product.price * product.qty
-                                ).toLocaleString()}
+                                {convertPrice(
+                                    product.product.price * product.qty,
+                                    currency
+                                )}
                             </Text>
                         </FlexWrapper>
                     ))}

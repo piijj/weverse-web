@@ -6,12 +6,14 @@ import {
     Button,
 } from "@material-ui/core";
 import styled from "styled-components";
-import { getSelectedItemsCount, getSubtotal } from "../../utils";
+import { convertPrice, getSelectedItemsCount, getSubtotal } from "../../utils";
 import { useUserState } from "../../context/UserContext";
 import ShippingAddressForm from "./ShippingAddressForm";
 import AddressList from "./AddressList";
 import ShopperDetailsForm from "./ShopperDetailsForm";
 import ShippingOption from "./ShippingOption";
+import { useDataState } from "../../context/DataContext";
+import currencies from "../../utils/currencies";
 
 const Text = styled.div`
     font-size: ${(props) => props.fontSize || 14}px;
@@ -66,6 +68,7 @@ const AccordionDetailsWrapper = styled(AccordionDetails)`
 
 const Checkout = ({ checked, cart }) => {
     const { address, addresses, shopperDetails } = useUserState();
+    const { currency } = useDataState();
     const [active, setActive] = useState(0);
     const [addAddress, setAddAddress] = useState(false);
     const count = getSelectedItemsCount(cart, checked);
@@ -87,7 +90,7 @@ const Checkout = ({ checked, cart }) => {
                     fontSize="14"
                     fontWeight="bold"
                 >
-                    ₩{getSubtotal(cart, checked).toLocaleString()}
+                    {getSubtotal(cart, checked, currency).toLocaleString()}
                 </Text>
             </Details>
             <Accordion
@@ -193,8 +196,11 @@ const Checkout = ({ checked, cart }) => {
                     <div>
                         <Text margin="10px 0px">
                             {shipToSK
-                                ? "CJ 대한 통운 (₩0)"
-                                : "International Shipping Fee (₩26,787)"}
+                                ? `CJ 대한 통운 (${currencies[currency].symbol}0)`
+                                : `International Shipping Fee (${convertPrice(
+                                      26780,
+                                      currency
+                                  )})`}
                         </Text>
                         <Text color="rgb(173, 177, 184)">{details}</Text>
                     </div>
