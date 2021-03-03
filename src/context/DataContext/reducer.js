@@ -10,18 +10,6 @@ const reducer = (state, action) => {
                 ...state,
                 shops: action.payload,
             };
-        case "SET_ARTIST":
-            return {
-                ...state,
-                artist: action.payload,
-                shop: null,
-                products: [],
-            };
-        case "SET_SHOP":
-            return {
-                ...state,
-                shop: action.payload,
-            };
         case "SET_PRODUCTS":
             return {
                 ...state,
@@ -33,11 +21,13 @@ const reducer = (state, action) => {
                 ...state,
                 loading: action.payload,
             };
-        case "AUTO_SELECT_ARTIST_AND_SHOP":
+        case "SET_ARTIST_AND_SHOP":
             return {
                 ...state,
-                artist: state.artists[0],
-                shop: state.shops[state.artists[0].shopIds[0]],
+                artist: action.payload.artist || state.artists[0],
+                shop:
+                    action.payload.shop ||
+                    state.shops[state.artists[0].shopIds[0]],
                 loading: false,
             };
 
@@ -51,6 +41,11 @@ const reducer = (state, action) => {
                 ...state,
                 product: action.payload,
                 productLoading: false,
+            };
+        case "SET_CURRENCY":
+            return {
+                ...state,
+                currency: action.payload,
             };
         default:
             return state;

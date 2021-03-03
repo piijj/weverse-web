@@ -12,6 +12,7 @@ const initialState = {
     loading: true,
     product: null,
     productLoading: true,
+    currency: "krw",
 };
 
 const DataStateContext = createContext(initialState);
@@ -72,6 +73,11 @@ const DataProvider = ({ children }) => {
                         type: "SET_PRODUCTS",
                         payload: { products, categories },
                     });
+                } else {
+                    dispatch({
+                        type: "SET_PRODUCTS",
+                        payload: { products: [], categories: [] },
+                    });
                 }
             });
     };
@@ -112,15 +118,7 @@ const DataProvider = ({ children }) => {
         await dispatch({ type: "SET_LOADING", payload: true });
         await fetchShops();
         await fetchArtists();
-        await dispatch({ type: "AUTO_SELECT_ARTIST_AND_SHOP" });
-    };
-
-    const handleSelectArtist = (artist) => {
-        dispatch({ type: "SET_ARTIST", payload: artist });
-    };
-
-    const handleSelectShop = (shop) => {
-        dispatch({ type: "SET_SHOP", payload: shop });
+        await dispatch({ type: "SET_ARTIST_AND_SHOP", payload: {} });
     };
 
     useEffect(() => {
@@ -140,8 +138,6 @@ const DataProvider = ({ children }) => {
             <DataDispatchContext.Provider
                 value={{
                     dispatch,
-                    handleSelectArtist,
-                    handleSelectShop,
                     handleAddProduct,
                     fetchProduct,
                 }}
