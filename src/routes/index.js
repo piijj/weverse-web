@@ -8,6 +8,7 @@ import AddProduct from "../pages/AddProduct";
 import ViewProduct from "../pages/ViewProduct";
 import Cart from "../pages/Cart";
 import Settings from "../pages/Settings";
+import Account from "../pages/Account";
 
 const Wrapper = () => {
     return (
@@ -18,6 +19,7 @@ const Wrapper = () => {
             <Route path="/product/:id" component={ViewProduct} />
             <Route path="/cart" component={Cart} />
             <Route path="/settings" component={Settings} />
+            <Route path="/account" component={Account} />
             <Route path="/" component={Home} />
         </Switch>
     );

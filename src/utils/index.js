@@ -6,7 +6,7 @@ export const convertPrice = (price, currency) => {
 };
 
 const formatPrice = (price, currency) =>
-    `${currencies[currency].symbol} ${Number(
+    `${currencies[currency].symbol}${Number(
         parseFloat(price).toFixed(2)
     ).toLocaleString("en")}`;
 
