@@ -8,8 +8,8 @@ import {
     OutlinedInput,
 } from "@material-ui/core";
 import styled from "styled-components";
-import { convertPrice, getSelectedItemsCount, getSubtotal } from "../../utils";
-import { useUserState } from "../../context/UserContext";
+import { convertPrice, getOrderSummary } from "../../utils";
+import { useUserDispatch, useUserState } from "../../context/UserContext";
 import ShippingAddressForm from "./ShippingAddressForm";
 import AddressList from "./AddressList";
 import ShopperDetailsForm from "./ShopperDetailsForm";
@@ -40,7 +40,7 @@ const CheckoutPanel = styled.div`
 const Details = styled.div`
     display: flex;
     justify-content: space-between;
-    margin: 10px 0px;
+    margin: ${(props) => props.margin || "10px 0px"};
 `;
 
 const ButtonWrapper = styled(Button)`
@@ -78,13 +78,19 @@ const CashButton = styled(Button)`
     width: 90px;
 `;
 
+const Earnings = styled.div`
+    padding: 10px 0px;
+    background: #edfbf4;
+    text-align: center;
+    margin: 10px 0px 20px;
+`;
+
 const Checkout = ({ checked, cart }) => {
     const { user, address, addresses, shopperDetails } = useUserState();
     const { currency } = useDataState();
     const [active, setActive] = useState(0);
     const [addAddress, setAddAddress] = useState(false);
-    const [cashToUse, setCashToUser] = useState("");
-    const count = getSelectedItemsCount(cart, checked);
+    const [cashToUse, setCashToUser] = useState(0);
     const cash = convertPrice(user.cash, currency, false);
 
     const shipToSK = address && address.country.text === "South Korea";
@@ -93,20 +99,10 @@ const Checkout = ({ checked, cart }) => {
         "Additional shipping fee will be charged for Jeju Island, Ulleung Island, and other regions. (3,000 / 5,000 KRW depending on regions)"
     }`;
 
+    const order = getOrderSummary(cart, checked, cashToUse, currency, shipToSK);
+
     return (
         <CheckoutPanel>
-            <Details>
-                <Text fontFamily="Noto Sans KR, sans-serif" fontSize="14">
-                    Total ({count} item{count > 1 && "s"})
-                </Text>
-                <Text
-                    fontFamily="Noto Sans KR, sans-serif"
-                    fontSize="14"
-                    fontWeight="bold"
-                >
-                    {getSubtotal(cart, checked, currency).toLocaleString()}
-                </Text>
-            </Details>
             <Accordion
                 expanded={active === 1}
                 onChange={() => setActive(active === 1 ? 0 : 1)}
@@ -262,6 +258,55 @@ const Checkout = ({ checked, cart }) => {
                         Available now: {currencies[currency].symbol}
                         {cash}
                     </Text>
+                </AccordionSummaryWrapper>
+            </Accordion>
+            <Accordion expanded={false}>
+                <AccordionSummaryWrapper>
+                    <Text fontSize={16} fontWeight={400}>
+                        Order Summary
+                    </Text>
+                    <Details margin="5px 0px">
+                        <Text fontSize={14} fontWeight={400}>
+                            Subtotal ({order.itemsCount} item
+                            {order.itemsCount > 1 && "s"})
+                        </Text>
+                        <Text fontSize={14} fontWeight={400}>
+                            {order.subtotal}
+                        </Text>
+                    </Details>
+                    <Details margin="5px 0px">
+                        <Text fontSize={14} fontWeight={400}>
+                            Discount (Weverse Shop Cash)
+                        </Text>
+                        <Text fontSize={14} fontWeight={400}>
+                            {currencies[currency].symbol}
+                            {cashToUse}
+                        </Text>
+                    </Details>
+                    <Details margin="5px 0px">
+                        <Text fontSize={14} fontWeight={400}>
+                            Shipping Fee
+                        </Text>
+                        <Text fontSize={14} fontWeight={400}>
+                            {order.shippingFee}
+                        </Text>
+                    </Details>
+                    <Details margin="5px 0px">
+                        <Text fontSize={16} fontWeight="bold">
+                            Grand Total
+                        </Text>
+                        <Text fontSize={16} fontWeight="bold">
+                            {order.total}
+                        </Text>
+                    </Details>
+                    <Earnings>
+                        <Text color="#3bb988" fontWeight="bold">
+                            Earned Weverse Shop Cash: {order.cashToEarn}
+                        </Text>
+                    </Earnings>
+                    <Button disabled={!address || !shopperDetails}>
+                        Checkout
+                    </Button>
                 </AccordionSummaryWrapper>
             </Accordion>
         </CheckoutPanel>

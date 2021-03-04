@@ -5,7 +5,7 @@ export const convertPrice = (price, currency, withLabel = true) => {
     return formatPrice(converted, currency, withLabel);
 };
 
-const formatPrice = (price, currency, withLabel) =>
+const formatPrice = (price, currency, withLabel = true) =>
     `${withLabel ? currencies[currency].symbol : ""}${Number(
         parseFloat(price).toFixed(2)
     ).toLocaleString("en")}`;
@@ -18,7 +18,31 @@ export const getPoints = (amount, currency) => {
 export const getCartProductCount = (cart) =>
     cart.reduce((a, b) => Number(a) + Number(b.qty), 0);
 
-export const getSubtotal = (cart, selected, currency) => {
+export const groupCartOrdersByShippingDate = (cart) => {
+    const groups = {};
+
+    cart.forEach((p) => {
+        const shippingDate = p.product.shippingDate.split("T")[0];
+        const date =
+            new Date(shippingDate) > Date.now()
+                ? new Date(shippingDate).toLocaleDateString()
+                : "soon";
+        groups[date] = groups[date] ? [...groups[date], p] : [p];
+    });
+
+    return groups;
+};
+
+export const getOrderSummary = (cart, selected, cash, currency, shipToSK) => {
+    const selectedItems = cart.filter((c) => selected.includes(c.id));
+    const grouped = groupCartOrdersByShippingDate(selectedItems);
+
+    const itemsCount = cart.reduce(
+        (a, b) =>
+            selected.includes(b.id) ? Number(a) + Number(b.qty) : Number(a),
+        0
+    );
+
     const subtotal = cart.reduce(
         (a, b) =>
             selected.includes(b.id)
@@ -26,28 +50,16 @@ export const getSubtotal = (cart, selected, currency) => {
                 : a,
         0
     );
-    return convertPrice(subtotal, currency);
+    const shippingFee = shipToSK
+        ? 0
+        : 26780 * Object.keys(grouped).length + itemsCount * 1200;
+    const total = subtotal + shippingFee - cash;
+
+    return {
+        total: formatPrice(total, currency),
+        subtotal: formatPrice(subtotal, currency),
+        shippingFee: formatPrice(shippingFee, currency),
+        cashToEarn: getPoints(subtotal, currency),
+        itemsCount,
+    };
 };
-
-export const groupCartOrdersByShippingDate = (cart) => {
-    const groups = { soon: [] };
-
-    cart.forEach((p) => {
-        const shippingDate = p.product.shippingDate.split("T")[0];
-        if (new Date(shippingDate) > Date.now()) {
-            const date = new Date(shippingDate).toLocaleDateString();
-            groups[date] = groups[date] ? [...groups[date], p] : [p];
-        } else {
-            groups.soon = [...groups.soon, p];
-        }
-    });
-
-    return groups;
-};
-
-export const getSelectedItemsCount = (cart, selected) =>
-    cart.reduce(
-        (a, b) =>
-            selected.includes(b.id) ? Number(a) + Number(b.qty) : Number(a),
-        0
-    );
