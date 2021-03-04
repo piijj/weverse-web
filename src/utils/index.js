@@ -1,5 +1,4 @@
-import currencies from "./currencies";
-const rates = { JPY: 0.1, USD: 0.00097277 };
+import currencies, { rates, pointsMultiplier } from "./currencies";
 
 export const convertPrice = (price, currency) => {
     const converted = currency !== "KRW" ? price * rates[currency] : price;
@@ -12,19 +11,7 @@ const formatPrice = (price, currency) =>
     ).toLocaleString("en")}`;
 
 export const getPoints = (amount, currency) => {
-    let points;
-    switch (currency) {
-        case "USD":
-            points = Math.round((amount * rates.USD) / 5) * 0.05;
-            break;
-        case "JPY":
-            points = Math.round((amount * rates.JPY) / 5000) * 50;
-            break;
-        default:
-            points = Math.round(amount / 5000) * 50;
-            break;
-    }
-
+    const points = Math.round(amount / 5000) * pointsMultiplier[currency];
     return formatPrice(points, currency);
 };
 
