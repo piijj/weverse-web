@@ -36,6 +36,11 @@ const reducer = (state, action) => {
                 ...state,
                 shopperDetails: action.payload,
             };
+        case "SET_PAYING":
+            return {
+                ...state,
+                paying: action.payload,
+            };
         default:
             return state;
     }

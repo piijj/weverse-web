@@ -6,6 +6,7 @@ import { useUserState } from "../context/UserContext";
 import { getCartProductCount, groupCartOrdersByShippingDate } from "../utils";
 import Checkout from "../components/Cart/Checkout";
 import GroupByShipping from "../components/Cart/GroupByShipping";
+import { Backdrop } from "@material-ui/core";
 
 const Text = styled.div`
     font-size: ${(props) => props.fontSize || 14}px;
@@ -34,8 +35,14 @@ const Items = styled.div`
     }
 `;
 
+const BackdropWrapper = styled(Backdrop)`
+    ${({ theme }) => `
+        z-index: ${theme.zIndex.drawer + 1};
+    `}
+`;
+
 const Cart = () => {
-    const { cart, loading: userLoading } = useUserState();
+    const { cart, paying, loading: userLoading } = useUserState();
     const allIds = cart.map((c) => c.id);
     const [checked, setChecked] = useState([]);
     const [groups, setGroups] = useState([]);
@@ -48,6 +55,9 @@ const Cart = () => {
 
     return (
         <Layout>
+            <BackdropWrapper open={paying}>
+                <LoadingSpinner />
+            </BackdropWrapper>
             <Text
                 fontFamily="Noto Sans KR, sans-serif"
                 fontSize="30"

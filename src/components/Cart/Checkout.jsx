@@ -87,6 +87,7 @@ const Earnings = styled.div`
 
 const Checkout = ({ checked, cart }) => {
     const { user, address, addresses, shopperDetails } = useUserState();
+    const { handleCheckout } = useUserDispatch();
     const { currency } = useDataState();
     const [active, setActive] = useState(0);
     const [addAddress, setAddAddress] = useState(false);
@@ -267,11 +268,11 @@ const Checkout = ({ checked, cart }) => {
                     </Text>
                     <Details margin="5px 0px">
                         <Text fontSize={14} fontWeight={400}>
-                            Subtotal ({order.itemsCount} item
-                            {order.itemsCount > 1 && "s"})
+                            Subtotal ({order.itemsCount.overall} item
+                            {order.itemsCount.overall > 1 && "s"})
                         </Text>
                         <Text fontSize={14} fontWeight={400}>
-                            {order.subtotal}
+                            {order.subtotal.overall}
                         </Text>
                     </Details>
                     <Details margin="5px 0px">
@@ -288,7 +289,7 @@ const Checkout = ({ checked, cart }) => {
                             Shipping Fee
                         </Text>
                         <Text fontSize={14} fontWeight={400}>
-                            {order.shippingFee}
+                            {order.shippingFee.overall}
                         </Text>
                     </Details>
                     <Details margin="5px 0px">
@@ -296,15 +297,25 @@ const Checkout = ({ checked, cart }) => {
                             Grand Total
                         </Text>
                         <Text fontSize={16} fontWeight="bold">
-                            {order.total}
+                            {order.total.overall}
                         </Text>
                     </Details>
                     <Earnings>
                         <Text color="#3bb988" fontWeight="bold">
-                            Earned Weverse Shop Cash: {order.cashToEarn}
+                            Earned Weverse Shop Cash: {order.cashToEarn.overall}
                         </Text>
                     </Earnings>
-                    <Button disabled={!address || !shopperDetails}>
+                    <Button
+                        disabled={!address || !shopperDetails}
+                        onClick={() =>
+                            handleCheckout(
+                                cart,
+                                checked,
+                                order,
+                                convertPrice(cashToUse, currency, false, true)
+                            )
+                        }
+                    >
                         Checkout
                     </Button>
                 </AccordionSummaryWrapper>

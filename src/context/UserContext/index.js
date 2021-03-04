@@ -2,6 +2,7 @@ import React, { useEffect, useContext, createContext, useReducer } from "react";
 import { useHistory } from "react-router-dom";
 import reducer from "./reducer";
 import firebase, { facebook, twitter, google } from "../../api/firebase";
+import { groupCartOrdersByShippingDate, generateOrderId } from "../../utils";
 
 const initialState = {
     user: {},
@@ -11,6 +12,7 @@ const initialState = {
     addresses: [],
     address: undefined,
     shopperDetails: undefined,
+    paying: false,
 };
 
 const UserStateContext = createContext(initialState);
@@ -283,6 +285,64 @@ const UserProvider = ({ children }) => {
             .catch((error) => showMessage(error.message, "error"));
     };
 
+    const handleCheckout = (cart, selected, orderDetails, cash) => {
+        const orders = groupCartOrdersByShippingDate(cart, selected);
+        dispatch({ type: "SET_PAYING", payload: true });
+        Object.keys(orders).map(async (order, index) => {
+            const ids = orders[order].map((i) => i.id);
+            const payload = {
+                orderId: generateOrderId(),
+                shippingAddress: state.address,
+                shopper: state.shopperDetails,
+                ...orderDetails,
+                shippedDate: order,
+                total: orderDetails.total[order],
+                subtotal: orderDetails.subtotal[order],
+                shippingFee: orderDetails.shippingFee[order],
+                cashToEarn: orderDetails.cashToEarn[order],
+                itemsCount: orderDetails.itemsCount[order],
+                cashUsed: orderDetails.cashUsed[order],
+                items: ids,
+            };
+            await firebase
+                .firestore()
+                .collection("orders")
+                .add(payload)
+                .then(() => {
+                    orders[order].forEach(async (item, i) => {
+                        await firebase
+                            .firestore()
+                            .collection("cartItems")
+                            .doc(item.id)
+                            .update({ ordered: true })
+                            .then(() => {
+                                if (
+                                    index === Object.keys(orders).length - 1 &&
+                                    i === orders[order].length - 1
+                                ) {
+                                    dispatch({
+                                        type: "SET_PAYING",
+                                        payload: false,
+                                    });
+                                }
+                            })
+                            .catch((error) =>
+                                showMessage(error.message, "error")
+                            );
+                    });
+                })
+                .catch((error) => showMessage(error.message, "error"));
+
+            await firebase
+                .firestore()
+                .collection("users")
+                .doc(state.user.id)
+                .update({ cash: Number(state.user.cash) - Number(cash) })
+                .then(() => console.log("success"))
+                .catch((error) => showMessage(error.message, "error"));
+        });
+    };
+
     return (
         <UserStateContext.Provider value={state}>
             <UserDispatchContext.Provider
@@ -296,6 +356,7 @@ const UserProvider = ({ children }) => {
                     handleRemoveFromCart,
                     handleUpdateCart,
                     handleAddAddress,
+                    handleCheckout,
                 }}
             >
                 {children}
