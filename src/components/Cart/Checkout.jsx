@@ -4,6 +4,8 @@ import {
     AccordionDetails,
     AccordionSummary,
     Button,
+    InputAdornment,
+    OutlinedInput,
 } from "@material-ui/core";
 import styled from "styled-components";
 import { convertPrice, getSelectedItemsCount, getSubtotal } from "../../utils";
@@ -66,12 +68,24 @@ const AccordionDetailsWrapper = styled(AccordionDetails)`
     display: block;
 `;
 
+const OutlinedInputWrapper = styled(OutlinedInput)`
+    margin-right: 10px;
+    width: 75%;
+`;
+
+const CashButton = styled(Button)`
+    height: 47px;
+    width: 90px;
+`;
+
 const Checkout = ({ checked, cart }) => {
-    const { address, addresses, shopperDetails } = useUserState();
+    const { user, address, addresses, shopperDetails } = useUserState();
     const { currency } = useDataState();
     const [active, setActive] = useState(0);
     const [addAddress, setAddAddress] = useState(false);
+    const [cashToUse, setCashToUser] = useState("");
     const count = getSelectedItemsCount(cart, checked);
+    const cash = convertPrice(user.cash, currency, false);
 
     const shipToSK = address && address.country.text === "South Korea";
     const details = `For general product, it could take 7-14 business days. Please check release date for pre-order item. ${
@@ -185,7 +199,7 @@ const Checkout = ({ checked, cart }) => {
             </Accordion>
             <Accordion
                 expanded={active === 3}
-                onChange={() => setActive(active === 2 ? 0 : 3)}
+                onChange={() => setActive(active === 3 ? 0 : 3)}
             >
                 <AccordionSummaryWrapper
                     expandIcon={<ButtonWrapper>Change</ButtonWrapper>}
@@ -212,6 +226,43 @@ const Checkout = ({ checked, cart }) => {
                         details={details}
                     />
                 </AccordionDetailsWrapper>
+            </Accordion>
+            <Accordion expanded={false}>
+                <AccordionSummaryWrapper>
+                    <Text fontSize={16} fontWeight={400}>
+                        Weverse Shop Cash
+                    </Text>
+                    <Details>
+                        <OutlinedInputWrapper
+                            type="number"
+                            value={cashToUse}
+                            onChange={(e) => setCashToUser(e.target.value)}
+                            startAdornment={
+                                <InputAdornment position="start">
+                                    {currencies[currency].symbol}
+                                </InputAdornment>
+                            }
+                            disabled={user.cash === 0}
+                            inputProps={{
+                                min: 0,
+                                max: Number(cash),
+                                step:
+                                    currency === "KRW"
+                                        ? 1
+                                        : currency === "JPY"
+                                        ? 0.1
+                                        : 0.01,
+                            }}
+                        />
+                        <CashButton onClick={() => setCashToUser(cash)}>
+                            Use All
+                        </CashButton>
+                    </Details>
+                    <Text color="rgb(173, 177, 184)">
+                        Available now: {currencies[currency].symbol}
+                        {cash}
+                    </Text>
+                </AccordionSummaryWrapper>
             </Accordion>
         </CheckoutPanel>
     );

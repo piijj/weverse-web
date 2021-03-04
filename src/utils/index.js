@@ -1,12 +1,12 @@
 import currencies, { rates, pointsMultiplier } from "./currencies";
 
-export const convertPrice = (price, currency) => {
+export const convertPrice = (price, currency, withLabel = true) => {
     const converted = currency !== "KRW" ? price * rates[currency] : price;
-    return formatPrice(converted, currency);
+    return formatPrice(converted, currency, withLabel);
 };
 
-const formatPrice = (price, currency) =>
-    `${currencies[currency].symbol}${Number(
+const formatPrice = (price, currency, withLabel) =>
+    `${withLabel ? currencies[currency].symbol : ""}${Number(
         parseFloat(price).toFixed(2)
     ).toLocaleString("en")}`;
 
