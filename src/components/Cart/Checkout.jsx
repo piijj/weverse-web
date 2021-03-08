@@ -242,7 +242,7 @@ const Checkout = ({ checked, cart }) => {
                             disabled={user.cash === 0}
                             inputProps={{
                                 min: 0,
-                                max: Number(cash),
+                                max: user.cash,
                                 step:
                                     currency === "KRW"
                                         ? 1
@@ -251,7 +251,7 @@ const Checkout = ({ checked, cart }) => {
                                         : 0.01,
                             }}
                         />
-                        <CashButton onClick={() => setCashToUser(cash)}>
+                        <CashButton onClick={() => setCashToUser(user.cash)}>
                             Use All
                         </CashButton>
                     </Details>
@@ -306,7 +306,7 @@ const Checkout = ({ checked, cart }) => {
                         </Text>
                     </Earnings>
                     <Button
-                        disabled={!address || !shopperDetails}
+                        disabled={!address || !shopperDetails || checked.length === 0}
                         onClick={() =>
                             handleCheckout(
                                 cart,

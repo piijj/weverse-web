@@ -185,7 +185,7 @@ const UserProvider = ({ children }) => {
                                         ...data,
                                         id: doc.id,
                                     });
-                                    if (cart.length === querySnapshot.size) {
+                                    if (index === querySnapshot.size - 1) {
                                         dispatch({
                                             type: "SET_CART",
                                             payload: cart,
@@ -296,6 +296,7 @@ const UserProvider = ({ children }) => {
     const handleCheckout = (cart, selected, orderDetails, cash) => {
         const orders = groupCartOrdersByShippingDate(cart, selected);
         dispatch({ type: "SET_PAYING", payload: true });
+        const updatedUserCash = Number(state.user.cash) - Number(cash) + Number(orderDetails.cashToEarn.raw);
         Object.keys(orders).map(async (order, index) => {
             const ids = orders[order].map((i) => i.id);
             const payload = {
@@ -345,7 +346,7 @@ const UserProvider = ({ children }) => {
                 .firestore()
                 .collection("users")
                 .doc(state.user.id)
-                .update({ cash: Number(state.user.cash) - Number(cash) })
+                .update({ cash: updatedUserCash })
                 .then(() => console.log("success"))
                 .catch((error) => showMessage(error.message, "error"));
         });

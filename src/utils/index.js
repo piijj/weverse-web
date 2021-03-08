@@ -44,11 +44,11 @@ export const groupCartOrdersByShippingDate = (cart, selected) => {
 
 const getTotal = (arr, currency, cash = 0) => {
     let total = Object.keys(arr).reduce(
-        (a, b) => Number(a) + Number(arr[b]),
+        (a, b) => b !== "raw" ? Number(a) + Number(arr[b]) : Number(a),
         0
     );
-    total -= cash;
-    return formatPrice(total, currency);
+    total -= Number(cash);
+    return currency ? formatPrice(total, currency) : total;
 };
 
 export const getOrderSummary = (cart, selected, cash, currency, shipToSK) => {
@@ -92,6 +92,7 @@ export const getOrderSummary = (cart, selected, cash, currency, shipToSK) => {
     subtotal.overall = getTotal(subtotal, currency);
     shippingFee.overall = getTotal(shippingFee, currency);
     total.overall = getTotal(total, currency, cash);
+    cashToEarn.raw = getTotal(cashToEarn);
     cashToEarn.overall = getTotal(cashToEarn, currency);
 
     return {
