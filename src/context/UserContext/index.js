@@ -171,26 +171,33 @@ const UserProvider = ({ children }) => {
             .onSnapshot((querySnapshot) => {
                 if (!querySnapshot.empty) {
                     const cart = [];
-                    querySnapshot.docs.forEach(async (doc) => {
+                    querySnapshot.docs.forEach(async (doc, index) => {
                         const data = doc.data();
-                        await firebase
-                            .firestore()
-                            .collection("products")
-                            .doc(data.productId)
-                            .get()
-                            .then((product) => {
-                                cart.push({
-                                    product: { ...product.data() },
-                                    ...data,
-                                    id: doc.id,
-                                });
-                                if (cart.length === querySnapshot.size) {
-                                    dispatch({
-                                        type: "SET_CART",
-                                        payload: cart,
+                        if (!data.ordered) {
+                            await firebase
+                                .firestore()
+                                .collection("products")
+                                .doc(data.productId)
+                                .get()
+                                .then((product) => {
+                                    cart.push({
+                                        product: { ...product.data() },
+                                        ...data,
+                                        id: doc.id,
                                     });
-                                }
+                                    if (cart.length === querySnapshot.size) {
+                                        dispatch({
+                                            type: "SET_CART",
+                                            payload: cart,
+                                        });
+                                    }
+                                });
+                        } else if (index === querySnapshot.size - 1) {
+                            dispatch({
+                                type: "SET_CART",
+                                payload: [],
                             });
+                        }
                     });
                 }
             });
@@ -236,6 +243,7 @@ const UserProvider = ({ children }) => {
         } else {
             const payload = {
                 userId: state.user.id,
+                ordered: false,
                 ...product,
             };
             await firebase
