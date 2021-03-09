@@ -13,6 +13,7 @@ const initialState = {
     address: undefined,
     shopperDetails: undefined,
     paying: false,
+    orders: [],
 };
 
 const UserStateContext = createContext(initialState);
@@ -43,6 +44,7 @@ const UserProvider = ({ children }) => {
                 await getUser(user);
                 await getUserCart(user);
                 await getUserAddresses(user);
+                await getUserOrders(user);
             } else {
                 dispatch({ type: "SET_USER", payload: undefined });
                 history.push("/login");
@@ -219,6 +221,55 @@ const UserProvider = ({ children }) => {
             });
     };
 
+    const getUserOrders = (user) => {
+        firebase
+            .firestore()
+            .collection("orders")
+            .where("shippingAddress.userId", "==", user.uid)
+            .onSnapshot((querySnapshot) => {
+                if (!querySnapshot.empty) {
+                    const products = [];
+                    querySnapshot.docs.forEach((doc, index) => {
+                        const data = doc.data();
+                        const items = [];
+                        data.items.forEach(async (item, i) => {
+                            await firebase
+                                .firestore()
+                                .collection("cartItems")
+                                .doc(item)
+                                .get()
+                                .then(async (doc) => {
+                                    const product = doc.data();
+                                    await firebase
+                                        .firestore()
+                                        .collection("products")
+                                        .doc(product.productId)
+                                        .get()
+                                        .then((doc) => {
+                                            items.push({
+                                                product: { ...doc.data() },
+                                                ...product,
+                                                id: doc.id,
+                                            });
+
+                                            if (i === data.items.length - 1) {
+                                                data.items = items;
+                                                products.push(data);
+                                            }
+                                            if (index === querySnapshot.size - 1) {
+                                                dispatch({
+                                                    type: "SET_ORDERS",
+                                                    payload: products
+                                                });
+                                            }
+                                        });
+                                });
+                        });
+                    });
+                }
+            });
+    };
+
     //product => qty, product id, shop id
     const handleAddToCart = async (product, showSuccessModal) => {
         const oldProduct = state.cart.find(
@@ -296,7 +347,10 @@ const UserProvider = ({ children }) => {
     const handleCheckout = (cart, selected, orderDetails, cash) => {
         const orders = groupCartOrdersByShippingDate(cart, selected);
         dispatch({ type: "SET_PAYING", payload: true });
-        const updatedUserCash = Number(state.user.cash) - Number(cash) + Number(orderDetails.cashToEarn.raw);
+        const updatedUserCash =
+            Number(state.user.cash) -
+            Number(cash) +
+            Number(orderDetails.cashToEarn.raw);
         Object.keys(orders).map(async (order, index) => {
             const ids = orders[order].map((i) => i.id);
             const payload = {

@@ -10,6 +10,9 @@ import Layout from "../components/shared/Layout";
 import { useDataState } from "../context/DataContext";
 import { useUserState } from "../context/UserContext";
 import { convertPrice } from "../utils";
+import AddressList from "../components/shared/AddressList";
+import ShippingAddressForm from "../components/shared/ShippingAddressForm";
+import OrderList from "../components/Account/OrderList";
 
 const Text = styled.div`
     font-size: ${(props) => props.fontSize || 14}px;
@@ -33,6 +36,7 @@ const Settings = () => {
     const { currency } = useDataState();
     const { user } = useUserState();
     const [active, setActive] = useState(0);
+    const [addAddress, setAddAddress] = useState(false);
 
     return (
         <Layout>
@@ -83,6 +87,9 @@ const Settings = () => {
                             My Orders
                         </Text>
                     </AccordionSummary>
+                    <AccordionDetailsWrapper>
+                    <OrderList />
+                    </AccordionDetailsWrapper>
                 </Accordion>
                 <Accordion
                     expanded={active === 4}
@@ -104,7 +111,13 @@ const Settings = () => {
                         </Text>
                     </AccordionSummary>
                     <AccordionDetailsWrapper>
-                        <div>asdasdada</div>
+                    {addAddress ? (
+                        <ShippingAddressForm setActive={setActive} />
+                    ) : (
+                        <AddressList
+                            setAddAddress={setAddAddress}
+                        />
+                    )}
                     </AccordionDetailsWrapper>
                 </Accordion>
             </Wrapper>
