@@ -29,7 +29,7 @@ const CardWrapper = styled(Card)`
     margin-bottom: 10px;
 `;
 
-const Checkout = ({ setActive, setAddAddress }) => {
+const Checkout = ({ setActive, setAddAddress, onClick }) => {
     const { addresses } = useUserState();
     const { dispatch } = useUserDispatch();
 
@@ -56,7 +56,7 @@ const Checkout = ({ setActive, setAddAddress }) => {
                         <Text>{address.postalCode}</Text>
                         <Text>{address.mobileNumber}</Text>
                     </CardContent>
-                    <CardActions>
+                    { onClick && <CardActions>
                         <ButtonWrapper
                             height="20px"
                             onClick={() => handleSelectAddress(address)}
@@ -64,6 +64,7 @@ const Checkout = ({ setActive, setAddAddress }) => {
                             Select
                         </ButtonWrapper>
                     </CardActions>
+                    }
                 </CardWrapper>
             ))}
             <ButtonWrapper height="30px" onClick={() => setAddAddress(true)}>

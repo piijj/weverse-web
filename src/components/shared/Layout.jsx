@@ -11,7 +11,7 @@ import {
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 import { useDataState, useDataDispatch } from "../../context/DataContext";
-import Spinner from "../shared/Spinner";
+import Spinner from "./Spinner";
 import { useUserState } from "../../context/UserContext";
 import { convertPrice, getCartProductCount } from "../../utils";
 import ArtistList from "./ArtistList";

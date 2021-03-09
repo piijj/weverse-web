@@ -10,8 +10,8 @@ import {
 import styled from "styled-components";
 import { convertPrice, getOrderSummary } from "../../utils";
 import { useUserDispatch, useUserState } from "../../context/UserContext";
-import ShippingAddressForm from "./ShippingAddressForm";
-import AddressList from "./AddressList";
+import ShippingAddressForm from "../shared/ShippingAddressForm";
+import AddressList from "../shared/AddressList";
 import ShopperDetailsForm from "./ShopperDetailsForm";
 import ShippingOption from "./ShippingOption";
 import { useDataState } from "../../context/DataContext";
@@ -153,6 +153,7 @@ const Checkout = ({ checked, cart }) => {
                         <AddressList
                             setActive={setActive}
                             setAddAddress={setAddAddress}
+                            onClick={true}
                         />
                     )}
                 </AccordionDetailsWrapper>

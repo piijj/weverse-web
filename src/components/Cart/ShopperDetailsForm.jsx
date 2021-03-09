@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import styled from "styled-components";
 import PhoneInput from "react-phone-input-2";
 import "react-phone-input-2/lib/material.css";
-import "./style.css";
+import "../shared/style.css";
 import { useUserDispatch, useUserState } from "../../context/UserContext";
 
 const ErrorIcon = styled(Error)`
