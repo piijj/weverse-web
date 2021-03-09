@@ -184,7 +184,10 @@ const UserProvider = ({ children }) => {
                                 .get()
                                 .then((product) => {
                                     cart.push({
-                                        product: { ...product.data() },
+                                        product: {
+                                            ...product.data(),
+                                            id: product.id,
+                                        },
                                         ...data,
                                         id: doc.id,
                                     });
@@ -257,10 +260,13 @@ const UserProvider = ({ children }) => {
                                                 data.items = items;
                                                 products.push(data);
                                             }
-                                            if (index === querySnapshot.size - 1) {
+                                            if (
+                                                index ===
+                                                querySnapshot.size - 1
+                                            ) {
                                                 dispatch({
                                                     type: "SET_ORDERS",
-                                                    payload: products
+                                                    payload: products,
                                                 });
                                             }
                                         });
@@ -347,6 +353,7 @@ const UserProvider = ({ children }) => {
 
     const handleCheckout = (cart, selected, orderDetails, cash) => {
         const orders = groupCartOrdersByShippingDate(cart, selected);
+        console.log(orders);
         dispatch({ type: "SET_PAYING", payload: true });
         const updatedUserCash =
             Number(state.user.cash) -
@@ -374,6 +381,16 @@ const UserProvider = ({ children }) => {
                 .add(payload)
                 .then(() => {
                     orders[order].forEach(async (item, i) => {
+                        await firebase
+                            .firestore()
+                            .collection("products")
+                            .doc(item.product.id)
+                            .update({
+                                stock:
+                                    Number(item.product.stock) -
+                                    Number(item.qty),
+                            });
+
                         await firebase
                             .firestore()
                             .collection("cartItems")
