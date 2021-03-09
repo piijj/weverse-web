@@ -45,18 +45,12 @@ const ButtonWrapper = styled(Button)`
 const OrderList = () => {
     const { orders } = useUserState();
     const { currency } = useDataState();
-    console.log(orders);
     return (
         <>
-            {orders.map((order) => (
+            {orders.sort((a, b) =>  new Date(a.shippedDate) - new Date(b.shippedDate)).map((order) => (
                 <OrderWrapper key={order.id}>
                     <Text fontSize={14} margin="0px 0px 5px 0px">
-                        Shipping{" "}
-                        {order.shippedDate === "soon"
-                            ? order.shippedDate
-                            : `on ${moment(order.shippedDate).format(
-                                  "DD/MM/YYYY"
-                              )}`}
+                        {moment(order.shippedDate).isBefore(Date.now()) ? `Shipped ${order.shippedDate}` : `Shipping on ${order.shippedDate}`}
                     </Text>
                     {order.items.map((item) => (
                         <FlexWrapper margin="0px 0px 5px" key={item.id}>

@@ -37,7 +37,7 @@ export const groupCartOrdersByShippingDate = (cart, selected) => {
         const date =
             new Date(shippingDate) > Date.now()
                 ? new Date(shippingDate).toLocaleDateString()
-                : moment(Date.now()).add(3, "day").format("DD/MM/YYYY");
+                : moment(Date.now()).add(3, "day").format("MM/DD/YYYY");
         groups[date] = groups[date] ? [...groups[date], p] : [p];
     });
 
