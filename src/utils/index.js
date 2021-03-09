@@ -1,3 +1,4 @@
+import moment from "moment";
 import currencies, { rates, pointsMultiplier } from "./currencies";
 
 export const convertPrice = (
@@ -30,12 +31,13 @@ export const groupCartOrdersByShippingDate = (cart, selected) => {
     const newCart = selected
         ? cart.filter((c) => selected.includes(c.id))
         : cart;
+
     newCart.forEach((p) => {
         const shippingDate = p.product.shippingDate.split("T")[0];
         const date =
             new Date(shippingDate) > Date.now()
                 ? new Date(shippingDate).toLocaleDateString()
-                : "soon";
+                : moment(Date.now()).add(3, "day").format("DD/MM/YYYY");
         groups[date] = groups[date] ? [...groups[date], p] : [p];
     });
 

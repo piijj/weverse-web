@@ -18,7 +18,6 @@ const Text = styled.div`
     text-align: ${(props) => props.textAlign};
 `;
 
-
 const FlexWrapper = styled.div`
     display: flex;
     align-items: center;
@@ -34,14 +33,14 @@ const OrderWrapper = styled.div`
 `;
 
 const ButtonWrapper = styled(Button)`
-height: 16px;
-font-size: 9px;
-width: fit-content;
-border-radius: 2px;
-line-height: 0px;
-padding: 5px 5px 3px;
-float: right;
-`
+    height: 16px;
+    font-size: 9px;
+    width: fit-content;
+    border-radius: 2px;
+    line-height: 0px;
+    padding: 5px 5px 3px;
+    float: right;
+`;
 
 const OrderList = () => {
     const { orders } = useUserState();
@@ -50,12 +49,14 @@ const OrderList = () => {
     return (
         <>
             {orders.map((order) => (
-                <OrderWrapper>
+                <OrderWrapper key={order.id}>
                     <Text fontSize={14} margin="0px 0px 5px 0px">
                         Shipping{" "}
                         {order.shippedDate === "soon"
                             ? order.shippedDate
-                            : `on ${moment(order.shippedDate).format("DD/MM/YYYY")}`}
+                            : `on ${moment(order.shippedDate).format(
+                                  "DD/MM/YYYY"
+                              )}`}
                     </Text>
                     {order.items.map((item) => (
                         <FlexWrapper margin="0px 0px 5px" key={item.id}>

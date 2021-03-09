@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import reducer from "./reducer";
 import firebase, { facebook, twitter, google } from "../../api/firebase";
 import { groupCartOrdersByShippingDate, generateOrderId } from "../../utils";
+import moment from "moment";
 
 const initialState = {
     user: {},
@@ -230,7 +231,7 @@ const UserProvider = ({ children }) => {
                 if (!querySnapshot.empty) {
                     const products = [];
                     querySnapshot.docs.forEach((doc, index) => {
-                        const data = doc.data();
+                        const data = { ...doc.data(), id: doc.id };
                         const items = [];
                         data.items.forEach(async (item, i) => {
                             await firebase
