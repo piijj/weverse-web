@@ -252,7 +252,9 @@ const Checkout = ({ checked, cart }) => {
                                         : 0.01,
                             }}
                         />
-                        <CashButton onClick={() => setCashToUser(user.cash)}>
+                        <CashButton onClick={() => {
+                            setCashToUser(convertPrice(user.cash, currency, false, true).toFixed(2))
+                            }}>
                             Use All
                         </CashButton>
                     </Details>

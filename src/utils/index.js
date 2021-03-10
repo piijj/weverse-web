@@ -61,7 +61,11 @@ export const getOrderSummary = (cart, selected, cash, currency, shipToSK) => {
     const total = {};
     const cashToEarn = {};
     const cashUsed = {};
-    let remainingCash = Number(cash);
+    let remainingCash = convertPrice(
+        cash,
+        currency,
+        false,
+        true);
 
     Object.keys(grouped).forEach((group) => {
         itemsCount[group] = grouped[group].reduce(

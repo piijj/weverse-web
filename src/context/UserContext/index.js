@@ -201,7 +201,7 @@ const UserProvider = ({ children }) => {
                         } else if (index === querySnapshot.size - 1) {
                             dispatch({
                                 type: "SET_CART",
-                                payload: [],
+                                payload: cart,
                             });
                         }
                     });
